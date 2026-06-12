@@ -33,5 +33,6 @@
   - `js/page-*.jsx` — JSX riêng từng trang con (page-about, page-services, page-service-detail, page-shop, page-product, page-blog, page-blog-post, page-booking, page-testimonials, page-contact) — dùng làm tham chiếu chính khi build các route trong `implementation-backlog.md` mục 4
   - `*.html`, `assets/`, `screenshots/`, `references/`, `uploads/` — HTML standalone + assets gốc
   - Chỉ dùng để map sang component/route/content model, không phải production source
+- **Đã obsolete/archived — KHÔNG dùng làm reference cho bất kỳ việc gì:** `03_design_assets/design-handoff/web-lennie-2026-06-08/` và `03_design_assets/design-handoff/web-lennie-2026-06-11/` (cùng cấp với `Lennie-Strapi/`). Phase 3 (page build) ban đầu vô tình tham chiếu nhầm các folder handoff cũ này, dẫn đến build lệch so với `Web Lennie Design/` — đã redo lại 2026-06-12 đúng theo `Web Lennie Design/`. Quên hẳn 2 folder cũ này đi.
 - Bộ planning WordPress cũ ở `04_wordpress/plan/` không còn active, giữ lại làm tài liệu tham khảo lịch sử (content-model gốc là nguồn cho việc thiết kế Strapi schema)
 - `lennie-skin-lab-instructions.md` và `AGENTS.md` ở root project mô tả stack WordPress cũ; bản cập nhật cho stack Strapi+Next.js nằm tại `Lennie-Strapi/lennie-skin-lab-instructions.md` và `Lennie-Strapi/AGENTS.md`

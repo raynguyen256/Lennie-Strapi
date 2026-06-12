@@ -1,6 +1,6 @@
 # Lennie SkinLab — Development Plan (Strapi + Next.js)
 
-> Cập nhật: 2026-06-11
+> Cập nhật: 2026-06-12
 > Status: **ACTIVE**
 > Hướng build: `Strapi v5 self-hosted (SQLite → Postgres) + Next.js 16 App Router + Tailwind v4`
 
@@ -67,6 +67,14 @@ Mục tiêu của phase hiện tại: chuẩn hóa lại toàn bộ planning doc
 - **Strapi backend**: collection types, components, single types, permissions và seed data đã hoàn tất (mục 2 `implementation-backlog.md`)
 - **Frontend data layer**: `lib/strapi.js`, `.env.local`, `next.config.mjs` đã setup; home page đã chuyển sang fetch Strapi qua `home-content.js` (mục 3, 5 `implementation-backlog.md`)
 - **Page build (Phase 3) hoàn tất**: `/about`, `/services` + `/services/[slug]`, `/shop` + `/shop/[slug]`, `/blog` + `/blog/[slug]`, `/booking`, `/testimonials`, `/contact` — đều fetch Strapi qua `lib/page-content.js`, fallback `data.js` khi rỗng/down, RichText cho body/description, đã smoke-QA qua browser (không lỗi console). Chi tiết xem mục 4 `implementation-backlog.md`. Trong quá trình build đã fix một bug populate trong `lib/strapi.js` (`SERVICE_POPULATE.relatedFaqs`) khiến `/services/[slug]` luôn 404
+- **Phase 3 REDO (2026-06-12)**: bản build 2026-06-11 ở trên vô tình tham chiếu nhầm 2 folder
+  handoff cũ (`03_design_assets/design-handoff/web-lennie-2026-06-08`, `-2026-06-11`, nay đã ghi
+  "obsolete" trong `plan/README.md`) nên lệch khá nhiều so với `Web Lennie Design/`. Đã rebuild lại
+  toàn bộ 10 route đúng theo `Web Lennie Design/js/page-*.jsx`, mở rộng schema Strapi (`service`,
+  `product`, `blog-post`, `service-category` + collection type mới `branch`) và seed data tương ứng
+  (30 services/6 category, 10 products, 6 blog posts, 3 branches). Chi tiết component/schema mới ở
+  mục 2.1 và mục 4 `implementation-backlog.md`, field mới ở `content-model.md`. `npx next build`
+  pass cho cả 11 route sau redo
 
 ### Còn thiếu / backlog
 

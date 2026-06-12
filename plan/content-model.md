@@ -1,6 +1,6 @@
 # Lennie SkinLab — Content Model cho Strapi
 
-> Cập nhật: 2026-06-11
+> Cập nhật: 2026-06-12
 > Status: **ACTIVE**
 > Thay thế nội dung tương ứng trong `04_wordpress/plan/content-model.md` (CPT/Taxonomy/ACF/Options → Strapi Collection Types/Components/Single Types)
 
@@ -58,6 +58,14 @@ Tạo lớp dữ liệu có cấu trúc trong Strapi để:
   - `relatedResults` (relation, many-to-many → `skin-result`)
   - `relatedFaqs` (relation, many-to-many → `faq`)
   - `featuredOnHome` (boolean) — đánh dấu service xuất hiện trong slider `Services` ở home
+  - `tagline` (string) — **mới (2026-06-12)**, subline cho hero `/services/[slug]`
+  - `priceNote` (string) — **mới**, vd "/ buổi"
+  - `flagship` (boolean, default false) — **mới**, đánh dấu dịch vụ chủ lực
+  - `forWhom` (json — array string) — **mới**, "Dành cho ai"
+  - `problems` (json — array string) — **mới**, vấn đề da giải quyết
+  - `steps` (json — array `{title, desc}`) — **mới**, quy trình thực hiện
+  - `includes` (json — array string) — **mới**, danh sách hạng mục đi kèm
+  - `results` (json — array string) — **mới**, kết quả kỳ vọng
 
 ### `product`
 
@@ -73,6 +81,11 @@ Tạo lớp dữ liệu có cấu trúc trong Strapi để:
   - `description` (rich text, optional — cho trang single product)
   - `tags` (relation, many-to-many → `product-tag`) — thay cho `cats` array (`#XEMTẤTCẢ`, `#BÁNCHẠY`, ...)
   - `status` (enumeration: `catalog`, `available`) — catalog-only vs có thể bán
+  - `type` (string) — **mới (2026-06-12)**, vd "Serum", "Toner" (khớp filter `productTypes`)
+  - `skinTypes` (json — array string) — **mới**, khớp filter `skinTypes`
+  - `rating` (decimal) — **mới**, điểm đánh giá trung bình
+  - `reviews` (integer) — **mới**, số lượt đánh giá
+  - `oldPrice` (string, optional) — **mới**, giá gốc trước giảm
 
 ### `testimonial`
 
@@ -130,6 +143,9 @@ Tạo lớp dữ liệu có cấu trúc trong Strapi để:
   - `coverImage` (media, single)
   - `publishedDate` (date)
   - `category` (string hoặc relation đơn giản, optional cho MVP)
+  - `author` (string) — **mới (2026-06-12)**
+  - `readTime` (string) — **mới**, vd "5 phút đọc"
+  - `featured` (boolean, default false) — **mới**, đánh dấu bài spotlight cho `/blog`
 
 ### `team-member`
 
@@ -157,6 +173,7 @@ Strapi không có taxonomy native — dùng collection type quan hệ many-to-ma
 ### `service-category`
 
 - Phân nhóm dịch vụ (vd: routine cá nhân hóa, điều trị mụn, trẻ hóa)
+- `icon` (string) — **mới (2026-06-12)**, tên icon trong `src/lib/icons.jsx` cho category chip + `DetailHero` badge
 
 ### `skin-concern`
 
@@ -180,6 +197,19 @@ Strapi không có taxonomy native — dùng collection type quan hệ many-to-ma
 - Thay cho `cats` trong `productData` (vd: `#XEMTẤTCẢ`, `#BÁNCHẠY`, `#PHỤCHỒIDA`, `#CẤPẨMSÂU`)
 
 > Ghi chú MVP: các collection type này có thể để **flat** (không phân cấp), giữ field `parent` optional để mở rộng sau nếu cần.
+
+### `branch` — **mới (2026-06-12)**
+
+- Mục đích: cơ sở/chi nhánh Lennie SkinLab, dùng cho `/booking` và `/contact` (`BranchesList`)
+- `draftAndPublish: false` (giống `service-category` — danh sách tham chiếu nhỏ)
+- Fields:
+  - `name` (string, required)
+  - `tag` (string) — vd "Trụ sở chính", "Chi nhánh", "Tư vấn online"
+  - `address` (string)
+  - `note` (string) — ghi chú thêm (vd `[PLACEHOLDER]` khi chưa có data thật)
+  - `phone` (string)
+  - `hours` (string) — giờ mở cửa
+- Seed: 3 entries (HCM / Hà Nội / Online) từ `Web Lennie Design/js/data-pages.jsx` `branches`
 
 ---
 
@@ -294,6 +324,7 @@ Chi tiết đầy đủ ở `template-map.md`. Tóm tắt:
 | `reviewsData` | Collection `testimonial` | field-by-field như mục 3 |
 | `faqs` | Collection `faq` | `q` → `question`, `a` → `answer` |
 | `servicesForBooking` | Collection `service` (subset có `price` set) | lọc theo field hoặc category trong `BookingModal` |
+| `branches` | Collection `branch` | **mới (2026-06-12)** — dùng cho `/booking`, `/contact` |
 | `quizQuestions`, `generateRoutine` | **Giữ nguyên trong frontend** | logic quiz tĩnh, không cần CMS quản lý ở MVP — có thể CMS hóa sau nếu cần đổi câu hỏi thường xuyên |
 
 ---

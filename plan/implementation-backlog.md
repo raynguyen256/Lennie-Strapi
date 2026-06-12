@@ -41,6 +41,16 @@
 - [x] Cấu hình Users & Permissions: bật `find`/`findOne` public cho mọi collection/single type ở mục trên (qua `src/index.js` bootstrap)
 - [x] Seed data mẫu khớp `frontend/src/lib/data.js` (productData, servicesSlides, partnerBrands, mantraCards, teamData, reviewsData, faqs, servicesForBooking) qua `src/seed.js`, idempotent, kèm upload ảnh từ `frontend/public/assets/`
 
+### 2.1 Schema extension cho Phase 3 redo (2026-06-12)
+
+- [x] `service-category`: thêm `icon` (string) — lucide icon name cho category chip + `DetailHero` badge
+- [x] `service`: thêm `tagline`, `priceNote` (string), `flagship` (boolean), `forWhom`/`problems`/`includes`/`results` (json array string), `steps` (json array `{title, desc}`)
+- [x] `product`: thêm `type` (string), `skinTypes` (json array string), `rating` (decimal), `reviews` (integer), `oldPrice` (string)
+- [x] `blog-post`: thêm `author`, `readTime` (string), `featured` (boolean)
+- [x] Collection type mới `branch` (`name`, `tag`, `address`, `note`, `phone`, `hours`, `draftAndPublish: false`) — theo pattern `service-category`, kèm controller/route/service boilerplate
+- [x] `src/index.js`: thêm `'branch'` vào `COLLECTION_PERMISSIONS` (public find/findOne)
+- [x] `src/seed.js` + `src/seed-data/*.js`: mở rộng seed — 30 services / 6 category (kèm field mới), 10 products (kèm `type`/`skinTypes`/`rating`/`reviews`/`oldPrice`), 6 blog posts (kèm `author`/`readTime`/`featured`), 3 branches; idempotent
+
 ---
 
 ## 3. Frontend data layer
@@ -49,18 +59,74 @@
 - [x] Tạo `frontend/.env.local` với `NEXT_PUBLIC_STRAPI_URL=http://localhost:1337`
 - [x] Cấu hình `next.config.mjs` cho phép `next/image` load từ domain Strapi (`images.remotePatterns`)
 - [x] Định nghĩa convention: page (server component) fetch data → truyền props xuống client components hiện có (Hero, ProductShelf, Services, ...) — áp dụng ở mục 5
+- [x] Thêm `getBranches()` trong `strapi.js` (fetch collection `branch`, sort `name:asc`) — dùng cho `getBranchesContent()` trong `page-content.js`
 
 ---
 
 ## 4. Page build (trang con còn lại)
 
-- [x] `/about` — founder + team (dùng `PageHero`, `SectionHead`). Tạo `src/lib/page-content.js` (`getAboutContent`) + `app/about/page.js` (server) + `components/about/AboutView.jsx` (client). Tái dùng `About`, `MantraSection`, `PartnerStrip`, `ConsultSection` từ home. QA bằng screenshot: hero, founder bio, team carousel, mantra cards, partner strip, consult form, footer — không lỗi console.
-- [x] `/services` (archive) + `/services/[slug]` (single). `getServicesArchive`/`getServiceDetail` trong `page-content.js` + `app/services/page.js` + `components/services/ServicesView.jsx` (grid dịch vụ + filter), `app/services/[slug]/page.js` + `components/services/ServiceDetailView.jsx` (hero, body RichText, info grid, FAQ accordion, sticky CTA card). **Fix quan trọng**: sửa `SERVICE_POPULATE.populate.relatedFaqs` trong `src/lib/strapi.js` từ `{ populate: { answer: true } }` → `true` — Strapi v5 reject deep-populate trên field Blocks, lỗi này khiến `getServiceBySlug` luôn trả `null` (404 toàn bộ trang chi tiết dịch vụ) trước khi fix. QA 2 dịch vụ, không lỗi console.
-- [x] `/shop` (archive) + `/shop/[slug]` (single product). `getShopArchive`/`getProductDetail` + `app/shop/page.js` + `components/shop/ShopView.jsx` (filter theo tag, add-to-cart + `CartToast`), `app/shop/[slug]/page.js` + `components/shop/ProductDetailView.jsx` (ảnh, mô tả RichText, sản phẩm liên quan, add-to-cart). Thêm `slug` cho 4 sản phẩm fallback trong `lib/data.js` khớp `slugify()` của `backend/src/seed.js`. QA add-to-cart: badge giỏ hàng tăng đúng "1", không lỗi console.
-- [x] `/blog` (archive) + `/blog/[slug]` (single post). `getBlogArchive`/`getBlogDetail` + `app/blog/page.js` + `components/blog/BlogView.jsx` (grid bài viết), `app/blog/[slug]/page.js` + `components/blog/BlogDetailView.jsx` (cover, body RichText, bài viết liên quan). QA 1 bài viết đầy đủ — hero, nội dung, related posts, consult form, không lỗi console.
-- [x] `/booking` — dùng `ConsultForm`/`BookingModal` pattern, danh sách dịch vụ từ `service`. `getBookingContent` + `app/booking/page.js` + `components/booking/BookingView.jsx`: lưới chọn dịch vụ (click để chọn → khóa "Dịch vụ muốn đăng ký" trong `ConsultSection`), block hotline/địa chỉ/Messenger/Zalo nhanh. QA: chọn dịch vụ → label khóa đúng trong form, không lỗi console.
-- [x] `/testimonials` — archive từ `testimonial`. `getTestimonialsArchive` + `app/testimonials/page.js` + `components/testimonials/TestimonialsView.jsx`: lưới flip-card (tái dùng class `.flip-card`/`.flip-inner`/`.flip-face`/`.flip-back` có sẵn trong `globals.css`, dùng lại style từ `home/Testimonials.jsx` nhưng dạng grid tĩnh thay vì marquee). QA hiển thị 4 review, không lỗi console.
-- [x] `/contact` — từ `contact-info`. `getContactContent` + `app/contact/page.js` + `components/contact/ContactView.jsx`: thông tin địa chỉ/hotline/email/giờ mở cửa/social, thẻ "bản đồ" link ra Google Maps, `ConsultSection`. QA, không lỗi console.
+> **2026-06-12 — Redo toàn bộ mục 4** theo `Web Lennie Design/js/page-*.jsx` (xem `plan/README.md` —
+> 2 folder handoff cũ `03_design_assets/design-handoff/web-lennie-2026-06-08` và `-2026-06-11` đã bị
+> tham chiếu nhầm ở lần build trước, dẫn đến output lệch design). Mỗi route được rebuild
+> section-by-section, các sub-component mới sống cạnh view trong `components/<route>/`. Component
+> chrome mới dùng chung: `DetailHero.jsx`, `BranchesList.jsx` (mục 1.x/3 ở trên). Toàn bộ đã qua
+> `eslint` + `next build` (11 routes compile OK) sau mỗi group, commit riêng trong `frontend/.git`.
+
+- [x] `/about` (commit `eb0d934`) — founder + team + brand story + values + timeline. New:
+  `components/about/AboutStory.jsx`, `AboutValues.jsx` (4 `brandValues`), `AboutFounder.jsx`
+  (`founderTimeline`), `AboutTeam.jsx` (drag-scroll carousel). Compose: `PageHero` → `AboutStory` →
+  `StatStrip` → `AboutValues` → `AboutFounder` → `AboutTeam` → `PartnerStrip` → `CTABand`. Dropped
+  `MantraSection`/generic `About`/`ConsultSection` (không có trong design `/about`).
+- [x] `/services` + `/services/[slug]` (commit `ecb1d0a`) — `getServicesArchive`/`getServiceDetail`
+  surfaces field mới (`tagline`, `priceNote`, `flagship`, `forWhom`, `problems`, `steps`,
+  `includes`, `results`, `category.icon`) + related services (cùng category). New:
+  `components/services/ServicesIntro.jsx`, `ServicesApproach.jsx`, `ServiceCategoryFilters.jsx`,
+  `ServiceRow.jsx`, `ServicesCatalog.jsx` (client filter+pagination), `ServiceForWhomProblems.jsx`,
+  `ServiceSteps.jsx`, `ServiceIncludesResults.jsx`, `ServiceBookingSidebar.jsx`,
+  `RelatedServices.jsx`. `/services` compose: `PageHero` → `ServicesIntro` → `ServicesApproach` →
+  `ServicesCatalog` (category filter + `ServiceRow` list, paginated) → FAQ (`SectionHead`+
+  `FaqAccordion`) → `ConsultSection` → `CTABand`. `/services/[slug]` compose: `DetailHero` (group
+  badge+icon, tagline, duration) → body content + `ServiceForWhomProblems`/`ServiceSteps`/
+  `ServiceIncludesResults` + `ServiceBookingSidebar` (sticky) → FAQ → `RelatedServices` →
+  `ConsultSection` → `CTABand`.
+- [x] `/shop` + `/shop/[slug]` (commit `4a2ede4`) — `mapProduct`/`getShopArchive`/`getProductDetail`
+  surface `type`, `skinTypes`, `rating`, `reviews`, `oldPrice`. New:
+  `components/shop/ShopFilters.jsx` (type/skinType/price-band sidebar + "phân tích da" CTA),
+  `ShopSortBar.jsx`, `ShopProductCard.jsx` (rating stars + quick-view hover), `ShopCatalog.jsx`
+  (client filter/sort/pagination), `ProductQuickViewModal.jsx`, `ShopPagination.jsx`,
+  `ProductGallery.jsx`, `ProductRating.jsx`, `ProductQuantitySelector.jsx`, `ProductTabs.jsx`
+  (Mô tả/Cách dùng/Thông tin), `ProductTrustBadges.jsx`. `/shop` compose: `PageHero` →
+  `ShopFilters` + `ShopSortBar` + paginated `ShopProductCard` grid + `ProductQuickViewModal` →
+  `PartnerStrip` → `ConsultSection`. `/shop/[slug]` compose: breadcrumb → `ProductGallery` + info
+  column (`ProductRating`, giá/`oldPrice`, `ProductQuantitySelector`, add-to-cart + Messenger CTA,
+  `ProductTrustBadges`) → `ProductTabs` → related products (4-up) → `CTABand`. Giữ `CartToast`.
+- [x] `/blog` + `/blog/[slug]` (commit `ff7c8b0`) — `mapBlogPost`/`getBlogArchive`/`getBlogDetail`
+  surface `author`, `readTime`, `featured`, category-aware `related` (`computeRelatedPosts`). New:
+  `components/blog/BlogFeaturedCard.jsx` (spotlight bài `featured`), `BlogCategoryFilters.jsx`,
+  `BlogCard.jsx`, `BlogList.jsx` (client category filter), `BlogExcerptLede.jsx`,
+  `BlogAuthorShare.jsx`. `/blog` compose: `PageHero` → `BlogFeaturedCard` → `BlogList` → `CTABand`
+  (custom copy, `secondaryHref="/services"`). `/blog/[slug]` compose: `DetailHero` (category badge,
+  centered title, author/date/readTime meta) → `BlogExcerptLede` → `RichText` body → 
+  `BlogAuthorShare` → related posts grid (`bg-brand-blue-light`) → `ConsultSection`. Dropped
+  `ConsultSection` từ `/blog` (không có trong design).
+- [x] `/booking`, `/testimonials`, `/contact` (commit `c46667a`) —
+  - `/booking`: `getBookingContent` không đổi shape. New: `components/booking/BookingModes.jsx`
+    (Mode 1 Messenger/Zalo, Mode 2 form/hotline), `BookingForm.jsx` (service/branch/date/`BOOK_SLOTS`
+    time/name/phone/notes + success summary + reset). Compose: `PageHero` (copy mới) →
+    `BookingModes` → giữ lưới chọn dịch vụ bước 1 (built-only, feed `BookingForm` qua
+    `defaultService`) → `BookingForm` + `BranchesList` (từ `getBranchesContent()`) → `CTABand`
+    (custom, `onOpenBooking` mở quiz). `Navbar active="contact"` (theo design's `PageShell
+    active="contact"` cho `/booking`).
+  - `/testimonials`: New: `components/testimonials/TestimonialsFeaturedQuote.jsx` (spotlight
+    `reviews[1]`), `TrustChannels.jsx` (3 trust signal). Compose: `PageHero` (copy mới,
+    `model-glow.png`) → `StatStrip` → `TestimonialsFeaturedQuote` → `SectionHead` + flip-card grid
+    `sm:2 lg:4` (`h-[390px]`) + disclaimer → `TrustChannels` → `CTABand` (custom, thay
+    `ConsultSection`).
+  - `/contact`: `getContactContent` thêm `faqs` (via `getFaqsList()`). New:
+    `components/contact/ContactQuickChannels.jsx` (Messenger/Zalo/Email 3-card). Compose: `PageHero`
+    (copy mới, SLA 24-48h) → `ContactQuickChannels` → 2-col (`SectionHead` "Gửi lời nhắn" + trust
+    signal + image card + giữ social Fb/Ig/Tk | `ConsultForm`) → `BranchesList` (`variant="light"`)
+    + map-link card (giữ nguyên markup map cũ) → FAQ (`SectionHead`+`FaqAccordion`) → `CTABand`.
 
 ---
 
