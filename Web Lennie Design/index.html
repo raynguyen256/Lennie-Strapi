@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Lennie SkinLab — Dược mỹ phẩm trị liệu cá nhân hoá</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="js/theme.js"></script>
+
+<!-- ext-resource-dependency: images are string literals inside text/babel scripts,
+     so the bundler can't auto-discover them. Registered here; rewritten at runtime. -->
+<meta name="ext-resource-dependency" content="assets/logo-lennie.png" data-resource-id="assets/logo-lennie.png" />
+<meta name="ext-resource-dependency" content="assets/founder-portrait.png" data-resource-id="assets/founder-portrait.png" />
+<meta name="ext-resource-dependency" content="assets/product-hydrinity.png" data-resource-id="assets/product-hydrinity.png" />
+<meta name="ext-resource-dependency" content="assets/product-osmosis.png" data-resource-id="assets/product-osmosis.png" />
+<meta name="ext-resource-dependency" content="assets/product-viderm.png" data-resource-id="assets/product-viderm.png" />
+<meta name="ext-resource-dependency" content="assets/product-nescens.jpg" data-resource-id="assets/product-nescens.jpg" />
+<meta name="ext-resource-dependency" content="assets/remix/hero-biologique.png" data-resource-id="assets/remix/hero-biologique.png" />
+<meta name="ext-resource-dependency" content="assets/remix/clinic-treatment.png" data-resource-id="assets/remix/clinic-treatment.png" />
+<meta name="ext-resource-dependency" content="assets/remix/herb-mix.png" data-resource-id="assets/remix/herb-mix.png" />
+<meta name="ext-resource-dependency" content="assets/remix/model-glow.png" data-resource-id="assets/remix/model-glow.png" />
+<meta name="ext-resource-dependency" content="assets/remix/wellness-spa.png" data-resource-id="assets/remix/wellness-spa.png" />
+<meta name="ext-resource-dependency" content="assets/remix/team-1.png" data-resource-id="assets/remix/team-1.png" />
+<meta name="ext-resource-dependency" content="assets/remix/team-2.png" data-resource-id="assets/remix/team-2.png" />
+<meta name="ext-resource-dependency" content="assets/remix/team-3.png" data-resource-id="assets/remix/team-3.png" />
+<meta name="ext-resource-dependency" content="assets/remix/team-4.png" data-resource-id="assets/remix/team-4.png" />
+<meta name="ext-resource-dependency" content="assets/remix/team-5.png" data-resource-id="assets/remix/team-5.png" />
+<meta name="ext-resource-dependency" content="assets/remix/team-6.png" data-resource-id="assets/remix/team-6.png" />
+
+<script>
+/* Rewrites runtime <img src="assets/..."> (set by React) to inlined blob URLs.
+   No-op in dev (window.__resources undefined), active in the bundled standalone file. */
+(function () {
+  function resolve(s) {
+    if (!window.__resources || !s) return null;
+    if (window.__resources[s]) return window.__resources[s];
+    var i = s.indexOf('assets/');
+    if (i > 0) { var k = s.slice(i); if (window.__resources[k]) return window.__resources[k]; }
+    return null;
+  }
+  function sweep(root) {
+    if (!window.__resources || !root || !root.querySelectorAll) return;
+    root.querySelectorAll('img[src]').forEach(function (img) {
+      var r = resolve(img.getAttribute('src'));
+      if (r && img.src !== r) img.src = r;
+    });
+    root.querySelectorAll('[style*="assets/"]').forEach(function (el) {
+      var st = el.getAttribute('style');
+      var m = st && st.match(/url\(["']?([^"')]*assets\/[^"')]+)["']?\)/);
+      if (m) { var r = resolve(m[1]); if (r) el.style.backgroundImage = 'url("' + r + '")'; }
+    });
+  }
+  function start() {
+    sweep(document.body);
+    var mo = new MutationObserver(function (muts) {
+      for (var i = 0; i < muts.length; i++) {
+        var m = muts[i];
+        if (m.type === 'attributes' && m.target.tagName === 'IMG') {
+          var r = resolve(m.target.getAttribute('src'));
+          if (r && m.target.src !== r) m.target.src = r;
+        }
+        for (var j = 0; j < m.addedNodes.length; j++) {
+          var n = m.addedNodes[j];
+          if (n.nodeType === 1) {
+            if (n.tagName === 'IMG') { var rr = resolve(n.getAttribute('src')); if (rr) n.src = rr; }
+            sweep(n);
+          }
+        }
+      }
+    });
+    mo.observe(document.documentElement, { childList: true, subtree: true, attributes: true, attributeFilter: ['src', 'style'] });
+    [120, 400, 900, 1800, 3000].forEach(function (t) { setTimeout(function () { sweep(document.body); }, t); });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start);
+  else start();
+})();
+</script>
+</head>
+<body class="bg-white">
+  <template id="__bundler_thumbnail" data-bg-color="#e8f0f6">
+    <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+      <rect width="1200" height="800" fill="#e8f0f6"/>
+      <circle cx="600" cy="330" r="150" fill="none" stroke="#5789B7" stroke-width="10"/>
+      <path d="M540 330 q60 -90 120 0 q-60 90 -120 0 Z" fill="#5789B7"/>
+      <text x="600" y="600" font-family="Georgia, serif" font-size="120" fill="#2b3a4a" text-anchor="middle" font-style="italic">Lennie</text>
+      <text x="600" y="680" font-family="Arial, sans-serif" font-size="34" letter-spacing="14" fill="#5789B7" text-anchor="middle">SKINLAB</text>
+    </svg>
+  </template>
+  <div id="root"></div>
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+  <script type="text/babel" src="js/lib.jsx"></script>
+  <script type="text/babel" src="js/data-pages.jsx"></script>
+  <script type="text/babel" src="js/sections-1.jsx"></script>
+  <script type="text/babel" src="js/sections-1b.jsx"></script>
+  <script type="text/babel" src="js/sections-2.jsx"></script>
+  <script type="text/babel" src="js/sections-3.jsx"></script>
+  <script type="text/babel" src="js/sections-4.jsx"></script>
+  <script type="text/babel" src="js/chrome.jsx"></script>
+  <script type="text/babel" src="js/app-v2.jsx"></script>
+</body>
+</html>

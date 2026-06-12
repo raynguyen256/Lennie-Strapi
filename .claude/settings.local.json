@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find \".\" -maxdepth 6 -iname \"*design*\" -type d 2>/dev/null; echo \"---\"; find \"..\" -maxdepth 3 -iname \"*handoff*\" -o -iname \"*design*\" 2>/dev/null | grep -v node_modules)",
+      "Bash(git -C \"/Users/nguyenan/Documents/Claude/Projects/Lennie Skinlab/Lennie-Strapi/backend\" status --short)",
+      "Bash(git -C \"/Users/nguyenan/Documents/Claude/Projects/Lennie Skinlab/Lennie-Strapi\" reset)"
+    ]
+  }
+}
