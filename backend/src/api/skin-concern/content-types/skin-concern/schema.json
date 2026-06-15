@@ -1,0 +1,48 @@
+{
+  "kind": "collectionType",
+  "collectionName": "skin_concerns",
+  "info": {
+    "singularName": "skin-concern",
+    "pluralName": "skin-concerns",
+    "displayName": "Skin Concern",
+    "description": "Van de da dung chung cho service va skin-result"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "name"
+    },
+    "parent": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::skin-concern.skin-concern",
+      "inversedBy": "children"
+    },
+    "children": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::skin-concern.skin-concern",
+      "mappedBy": "parent"
+    },
+    "services": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::service.service",
+      "mappedBy": "skinConcerns"
+    },
+    "skinResults": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::skin-result.skin-result",
+      "mappedBy": "skinConcerns"
+    }
+  }
+}

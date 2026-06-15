@@ -1,0 +1,50 @@
+{
+  "kind": "singleType",
+  "collectionName": "homepage",
+  "info": {
+    "singularName": "homepage",
+    "pluralName": "homepages",
+    "displayName": "Homepage",
+    "description": "Hero, stats, mantra, services slider cho trang chu"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "heroEyebrow": {
+      "type": "string"
+    },
+    "heroHeading": {
+      "type": "string"
+    },
+    "heroText": {
+      "type": "text"
+    },
+    "heroImage": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"]
+    },
+    "heroSlides": {
+      "type": "component",
+      "component": "home.hero-slide",
+      "repeatable": true
+    },
+    "statsBar": {
+      "type": "component",
+      "component": "home.stat",
+      "repeatable": true
+    },
+    "mantraCards": {
+      "type": "component",
+      "component": "home.mantra-card",
+      "repeatable": true
+    },
+    "servicesSlides": {
+      "type": "component",
+      "component": "home.service-slide",
+      "repeatable": true
+    }
+  }
+}

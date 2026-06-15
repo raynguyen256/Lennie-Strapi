@@ -1,0 +1,33 @@
+{
+  "kind": "collectionType",
+  "collectionName": "service_categories",
+  "info": {
+    "singularName": "service-category",
+    "pluralName": "service-categories",
+    "displayName": "Service Category",
+    "description": "Phan nhom dich vu"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "name"
+    },
+    "icon": {
+      "type": "string"
+    },
+    "services": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::service.service",
+      "mappedBy": "category"
+    }
+  }
+}

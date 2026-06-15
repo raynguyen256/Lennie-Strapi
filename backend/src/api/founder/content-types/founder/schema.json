@@ -1,0 +1,40 @@
+{
+  "kind": "singleType",
+  "collectionName": "founder",
+  "info": {
+    "singularName": "founder",
+    "pluralName": "founders",
+    "displayName": "Founder",
+    "description": "Founder bio, credentials, trust proof"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "credential": {
+      "type": "string"
+    },
+    "portrait": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"]
+    },
+    "summary": {
+      "type": "blocks"
+    },
+    "trustPoints": {
+      "type": "component",
+      "component": "home.mantra-card",
+      "repeatable": true
+    },
+    "founderCta": {
+      "type": "component",
+      "component": "shared.cta",
+      "repeatable": false
+    }
+  }
+}

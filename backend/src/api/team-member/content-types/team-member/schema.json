@@ -1,0 +1,32 @@
+{
+  "kind": "collectionType",
+  "collectionName": "team_members",
+  "info": {
+    "singularName": "team-member",
+    "pluralName": "team-members",
+    "displayName": "Team Member",
+    "description": "Doi ngu chuyen mon"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "role": {
+      "type": "string"
+    },
+    "photo": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"]
+    },
+    "order": {
+      "type": "integer",
+      "default": 0
+    }
+  }
+}

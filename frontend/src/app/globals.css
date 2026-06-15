@@ -1,0 +1,222 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-brand-blue: #5789b7;
+  --color-brand-teal: #87c1e9;
+  --color-brand-blue-light: #f0f6fc;
+  --color-mist: #f4f9fd;
+  --color-light-bg: #eaf2fa;
+  --color-teal-soft: #eef6fc;
+  --color-ink: #2c4a6f;
+  --color-ink-2: #486a91;
+  --color-ink-3: #7ea6ce;
+  --color-divider: #dceaf5;
+
+  --font-sans: var(--font-plus-jakarta-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-spectral), Georgia, serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans);
+}
+
+::selection {
+  background: rgba(87, 137, 183, 0.2);
+}
+
+[id] {
+  scroll-margin-top: 116px;
+}
+
+/* ── Softer buttons (Homepage v2 final choice) ───────────────
+   Scoped to clickable elements only — gentler fills + hover.
+   Decorative spans/divs keep the crisp accent blue. */
+button.bg-brand-blue,
+a.bg-brand-blue,
+button.bg-ink,
+a.bg-ink {
+  background-color: #6e9bc4 !important;
+}
+button.bg-brand-blue:hover,
+a.bg-brand-blue:hover,
+button.bg-ink:hover,
+a.bg-ink:hover,
+.hover\:bg-ink:hover,
+.hover\:bg-brand-blue:hover {
+  background-color: #5e8bb6 !important;
+}
+.focus\:ring-brand-blue:focus {
+  --tw-ring-color: #9cbedd !important;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.dragging {
+  scroll-behavior: auto;
+}
+
+@keyframes kenburns {
+  0% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1.12);
+  }
+}
+.hero-kenburns {
+  animation: kenburns 18s ease-out forwards;
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  animation: heroReveal 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+.reveal-1 {
+  animation-delay: 0.15s;
+}
+.reveal-2 {
+  animation-delay: 0.3s;
+}
+.reveal-3 {
+  animation-delay: 0.45s;
+}
+.reveal-4 {
+  animation-delay: 0.6s;
+}
+.reveal-5 {
+  animation-delay: 0.75s;
+}
+@keyframes heroReveal {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.reveal-card {
+  opacity: 0;
+  transform: translateY(34px);
+  transition:
+    opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal-card.is-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+.reveal-x-l {
+  opacity: 0;
+  transform: translateX(-50px);
+  transition:
+    opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal-x-l.is-in {
+  opacity: 1;
+  transform: translateX(0);
+}
+.reveal-x-r {
+  opacity: 0;
+  transform: translateX(50px);
+  transition:
+    opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.1s,
+    transform 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.1s;
+}
+.reveal-x-r.is-in {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+.marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 40s linear infinite;
+}
+.marquee:hover {
+  animation-play-state: paused;
+}
+.marquee-slow {
+  display: flex;
+  width: max-content;
+  animation: marquee 55s linear infinite;
+}
+.marquee-slow:hover {
+  animation-play-state: paused;
+}
+
+.flip-card {
+  perspective: 1200px;
+}
+.flip-inner {
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-style: preserve-3d;
+}
+.flip-card:hover .flip-inner {
+  transform: rotateY(180deg);
+}
+.flip-face {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.flip-back {
+  transform: rotateY(180deg);
+}
+
+.modal-fade {
+  animation: modalFade 0.25s ease forwards;
+}
+@keyframes modalFade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.modal-pop {
+  animation: modalPop 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+@keyframes modalPop {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .reveal-card,
+  .reveal-x-l,
+  .reveal-x-r {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+  }
+  .hero-kenburns,
+  .marquee,
+  .marquee-slow {
+    animation: none !important;
+  }
+}

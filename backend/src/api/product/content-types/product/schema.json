@@ -1,0 +1,71 @@
+{
+  "kind": "collectionType",
+  "collectionName": "products",
+  "info": {
+    "singularName": "product",
+    "pluralName": "products",
+    "displayName": "Product",
+    "description": "San pham catalog"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "name",
+      "required": true
+    },
+    "brand": {
+      "type": "string"
+    },
+    "tag": {
+      "type": "string"
+    },
+    "price": {
+      "type": "string"
+    },
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"]
+    },
+    "badge": {
+      "type": "string"
+    },
+    "description": {
+      "type": "blocks"
+    },
+    "tags": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::product-tag.product-tag",
+      "inversedBy": "products"
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": ["catalog", "available"],
+      "default": "catalog"
+    },
+    "type": {
+      "type": "string"
+    },
+    "skinTypes": {
+      "type": "json"
+    },
+    "rating": {
+      "type": "decimal"
+    },
+    "reviews": {
+      "type": "integer"
+    },
+    "oldPrice": {
+      "type": "string"
+    }
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "kind": "collectionType",
+  "collectionName": "result_types",
+  "info": {
+    "singularName": "result-type",
+    "pluralName": "result-types",
+    "displayName": "Result Type",
+    "description": "Phan loai case result (before/after)"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "name"
+    },
+    "skinResults": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::skin-result.skin-result",
+      "mappedBy": "resultType"
+    }
+  }
+}

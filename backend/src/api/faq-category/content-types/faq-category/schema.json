@@ -1,0 +1,30 @@
+{
+  "kind": "collectionType",
+  "collectionName": "faq_categories",
+  "info": {
+    "singularName": "faq-category",
+    "pluralName": "faq-categories",
+    "displayName": "FAQ Category",
+    "description": "Nhom FAQ theo page/chu de"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "name"
+    },
+    "faqs": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::faq.faq",
+      "mappedBy": "category"
+    }
+  }
+}

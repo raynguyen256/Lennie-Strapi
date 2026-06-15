@@ -1,0 +1,16 @@
+{
+  "collectionName": "components_shared_opening_hours",
+  "info": {
+    "displayName": "Opening Hours",
+    "icon": "clock"
+  },
+  "options": {},
+  "attributes": {
+    "daysLabel": {
+      "type": "string"
+    },
+    "hours": {
+      "type": "string"
+    }
+  }
+}

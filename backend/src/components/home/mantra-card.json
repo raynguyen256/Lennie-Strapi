@@ -1,0 +1,19 @@
+{
+  "collectionName": "components_home_mantra_cards",
+  "info": {
+    "displayName": "Mantra Card",
+    "icon": "star"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
+    },
+    "icon": {
+      "type": "string"
+    }
+  }
+}

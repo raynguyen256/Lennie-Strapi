@@ -1,0 +1,39 @@
+{
+  "kind": "singleType",
+  "collectionName": "contact_info",
+  "info": {
+    "singularName": "contact-info",
+    "pluralName": "contact-infos",
+    "displayName": "Contact Info",
+    "description": "Dia chi, gio mo cua, social links"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "address": {
+      "type": "text"
+    },
+    "mapsUrl": {
+      "type": "string"
+    },
+    "openingHours": {
+      "type": "component",
+      "component": "shared.opening-hours",
+      "repeatable": true
+    },
+    "email": {
+      "type": "string"
+    },
+    "facebookUrl": {
+      "type": "string"
+    },
+    "instagramUrl": {
+      "type": "string"
+    },
+    "tiktokUrl": {
+      "type": "string"
+    }
+  }
+}

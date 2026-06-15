@@ -1,6 +1,2 @@
 .DS_Store
 node_modules/
-
-# backend/ and frontend/ are their own git repos (scaffolded separately) — tracked independently
-backend/
-frontend/

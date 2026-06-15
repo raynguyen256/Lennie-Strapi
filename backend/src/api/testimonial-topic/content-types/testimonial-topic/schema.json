@@ -1,0 +1,30 @@
+{
+  "kind": "collectionType",
+  "collectionName": "testimonial_topics",
+  "info": {
+    "singularName": "testimonial-topic",
+    "pluralName": "testimonial-topics",
+    "displayName": "Testimonial Topic",
+    "description": "Ngu canh cho testimonial"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "name"
+    },
+    "testimonials": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::testimonial.testimonial",
+      "mappedBy": "topic"
+    }
+  }
+}

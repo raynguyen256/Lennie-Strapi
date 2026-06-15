@@ -1,0 +1,38 @@
+{
+  "kind": "singleType",
+  "collectionName": "general_setting",
+  "info": {
+    "singularName": "general-setting",
+    "pluralName": "general-settings",
+    "displayName": "General Setting",
+    "description": "Hotline, CTA, social links site-wide"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "hotline": {
+      "type": "string"
+    },
+    "primaryCta": {
+      "type": "component",
+      "component": "shared.cta",
+      "repeatable": false
+    },
+    "secondaryCta": {
+      "type": "component",
+      "component": "shared.cta",
+      "repeatable": false
+    },
+    "messengerUrl": {
+      "type": "string"
+    },
+    "zaloUrl": {
+      "type": "string"
+    },
+    "whatsappUrl": {
+      "type": "string"
+    }
+  }
+}

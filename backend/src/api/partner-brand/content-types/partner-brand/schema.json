@@ -1,0 +1,29 @@
+{
+  "kind": "collectionType",
+  "collectionName": "partner_brands",
+  "info": {
+    "singularName": "partner-brand",
+    "pluralName": "partner-brands",
+    "displayName": "Partner Brand",
+    "description": "Logo/ten brand doi tac"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "logo": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"]
+    },
+    "order": {
+      "type": "integer",
+      "default": 0
+    }
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "kind": "collectionType",
+  "collectionName": "branches",
+  "info": {
+    "singularName": "branch",
+    "pluralName": "branches",
+    "displayName": "Branch",
+    "description": "Co so / chi nhanh Lennie"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "tag": {
+      "type": "string"
+    },
+    "address": {
+      "type": "string"
+    },
+    "note": {
+      "type": "string"
+    },
+    "phone": {
+      "type": "string"
+    },
+    "hours": {
+      "type": "string"
+    }
+  }
+}
