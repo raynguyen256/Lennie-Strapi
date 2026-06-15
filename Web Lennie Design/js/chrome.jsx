@@ -5,6 +5,200 @@
    ============================================================ */
 const { useState: useStateC, useEffect: useEffectC, useRef: useRefC } = React;
 
+/* ============================================================
+   CART STORE — localStorage-backed, shared across every page.
+   Items: { id, name, brand, img, price (number), qty }.
+   ============================================================ */
+const CART_KEY = 'lennie_cart_v1';
+const DESELECTED_KEY = 'lennie_cart_deselected_v1';
+const vnd = (n) => (n || 0).toLocaleString('vi-VN') + '₫';
+
+function readCart() {
+  try { return JSON.parse(localStorage.getItem(CART_KEY)) || []; }
+  catch (e) { return []; }
+}
+function writeCart(items) {
+  try { localStorage.setItem(CART_KEY, JSON.stringify(items)); } catch (e) {}
+  window.dispatchEvent(new CustomEvent('lennie-cart-change'));
+}
+function readDeselected() {
+  try { return JSON.parse(localStorage.getItem(DESELECTED_KEY)) || []; }
+  catch (e) { return []; }
+}
+function writeDeselected(ids) {
+  try { localStorage.setItem(DESELECTED_KEY, JSON.stringify(ids)); } catch (e) {}
+  window.dispatchEvent(new CustomEvent('lennie-cart-change'));
+}
+const CartStore = {
+  get: readCart,
+  add(p, qty = 1) {
+    if (!p) return;
+    const price = typeof p.price === 'number' ? p.price : parseInt(String(p.price || '').replace(/[^\d]/g, ''), 10) || 0;
+    const items = readCart();
+    const ex = items.find((i) => i.id === p.id);
+    if (ex) ex.qty += qty;
+    else items.push({ id: p.id, name: p.name, brand: p.brand || '', img: p.img, price, qty });
+    writeCart(items);
+  },
+  setQty(id, qty) {
+    let items = readCart();
+    if (qty <= 0) {
+      items = items.filter((i) => i.id !== id);
+      writeDeselected(readDeselected().filter((x) => x !== id));
+    } else {
+      const ex = items.find((i) => i.id === id);
+      if (ex) ex.qty = qty;
+    }
+    writeCart(items);
+  },
+  remove(id) {
+    writeCart(readCart().filter((i) => i.id !== id));
+    writeDeselected(readDeselected().filter((x) => x !== id));
+  },
+  removeMany(ids) {
+    writeCart(readCart().filter((i) => !ids.includes(i.id)));
+    writeDeselected(readDeselected().filter((x) => !ids.includes(x)));
+  },
+  clear() {
+    writeCart([]);
+    writeDeselected([]);
+  },
+  toggleSelect(id) {
+    const d = readDeselected();
+    writeDeselected(d.includes(id) ? d.filter((x) => x !== id) : [...d, id]);
+  },
+  selectAll() { writeDeselected([]); },
+  deselectAll() { writeDeselected(readCart().map((i) => i.id)); },
+};
+function useCart() {
+  const [items, setItems] = useStateC(readCart);
+  const [deselected, setDeselected] = useStateC(readDeselected);
+  useEffectC(() => {
+    const f = () => { setItems(readCart()); setDeselected(readDeselected()); };
+    window.addEventListener('lennie-cart-change', f);
+    window.addEventListener('storage', f);
+    return () => { window.removeEventListener('lennie-cart-change', f); window.removeEventListener('storage', f); };
+  }, []);
+  const count = items.reduce((s, i) => s + i.qty, 0);
+  const subtotal = items.reduce((s, i) => s + i.price * i.qty, 0);
+
+  const isSelected = (id) => !deselected.includes(id);
+  const selectedItems = items.filter((i) => isSelected(i.id));
+  const selectedCount = selectedItems.reduce((s, i) => s + i.qty, 0);
+  const selectedSubtotal = selectedItems.reduce((s, i) => s + i.price * i.qty, 0);
+  const allSelected = items.length > 0 && selectedItems.length === items.length;
+
+  return {
+    items, count, subtotal,
+    isSelected, selectedItems, selectedCount, selectedSubtotal, allSelected,
+    toggleSelect: CartStore.toggleSelect, selectAll: CartStore.selectAll, deselectAll: CartStore.deselectAll,
+    add: CartStore.add, setQty: CartStore.setQty, remove: CartStore.remove, removeMany: CartStore.removeMany, clear: CartStore.clear,
+  };
+}
+const openCartDrawer = () => window.dispatchEvent(new CustomEvent('lennie-open-cart'));
+
+/* ---------------- CART DRAWER (slide-in modal) ---------------- */
+function CartLineRow({ item, checked, onToggle, onQty, onRemove, compact }) {
+  return (
+    <div className="flex gap-3 py-4 border-b border-divider">
+      <button type="button" onClick={() => onToggle(item.id)} aria-pressed={checked} aria-label="Chọn sản phẩm"
+        className={`mt-1 w-5 h-5 shrink-0 rounded-sm border flex items-center justify-center transition-colors ${checked ? 'bg-brand-blue border-brand-blue text-white' : 'border-divider text-transparent hover:border-brand-blue'}`}>
+        <Icon.Check size={13} />
+      </button>
+      <a href={`product-detail.html?id=${item.id}`} className="w-16 h-16 shrink-0 bg-brand-blue-light border border-divider rounded-sm flex items-center justify-center p-1.5 overflow-hidden">
+        <img src={item.img} alt={item.name} className="h-full w-auto object-contain" />
+      </a>
+      <div className="flex-1 min-w-0">
+        <div className="flex items-start justify-between gap-2">
+          <div className="min-w-0">
+            <div className="font-sans text-[8px] font-bold tracking-[0.18em] uppercase text-brand-teal truncate">{item.brand}</div>
+            <a href={`product-detail.html?id=${item.id}`} className="block font-serif text-[14px] font-medium text-ink leading-snug hover:text-brand-blue transition-colors truncate">{item.name}</a>
+          </div>
+          <button type="button" onClick={() => onRemove(item.id)} className="shrink-0 text-ink-3 hover:text-brand-blue p-0.5" aria-label="Xóa"><Icon.X size={15} /></button>
+        </div>
+        <div className="flex items-center justify-between gap-2 mt-2">
+          <div className="flex items-center border border-divider rounded-sm">
+            <button type="button" onClick={() => onQty(item.id, item.qty - 1)} className="w-7 h-7 flex items-center justify-center text-ink-2 hover:text-brand-blue text-sm">−</button>
+            <span className="w-8 text-center font-sans text-[13px] font-bold text-ink">{item.qty}</span>
+            <button type="button" onClick={() => onQty(item.id, item.qty + 1)} className="w-7 h-7 flex items-center justify-center text-ink-2 hover:text-brand-blue text-sm">+</button>
+          </div>
+          <span className="font-serif text-[15px] font-bold text-ink">{vnd(item.price * item.qty)}</span>
+        </div>
+      </div>
+    </div>);
+
+}
+
+function CartDrawer() {
+  const [open, setOpen] = useStateC(false);
+  const { items, count, isSelected, toggleSelect, allSelected, selectAll, deselectAll, selectedCount, selectedSubtotal, setQty, remove } = useCart();
+  useEffectC(() => {
+    const o = () => setOpen(true);
+    window.addEventListener('lennie-open-cart', o);
+    return () => window.removeEventListener('lennie-open-cart', o);
+  }, []);
+  useEffectC(() => {
+    const esc = (e) => { if (e.key === 'Escape') setOpen(false); };
+    window.addEventListener('keydown', esc);
+    return () => window.removeEventListener('keydown', esc);
+  }, []);
+
+  return (
+    <>
+      {/* Overlay */}
+      <div onClick={() => setOpen(false)}
+        className={`fixed inset-0 bg-ink/55 backdrop-blur-sm z-[80] transition-opacity duration-300 ${open ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}></div>
+      {/* Panel */}
+      <aside className={`fixed top-0 right-0 h-full w-full max-w-[420px] bg-white z-[81] shadow-2xl flex flex-col transition-transform duration-[350ms] ease-[cubic-bezier(.16,1,.3,1)] ${open ? 'translate-x-0' : 'translate-x-full'}`}>
+        <div className="flex items-center justify-between px-6 h-[72px] border-b border-divider shrink-0">
+          <div className="flex items-center gap-2.5">
+            <span className="text-brand-blue"><Icon.Bag size={20} /></span>
+            <h3 className="font-serif text-xl font-semibold text-ink">Giỏ hàng</h3>
+            <span className="font-sans text-[11px] font-bold text-brand-blue bg-brand-blue-light rounded-full px-2 py-0.5">{count}</span>
+          </div>
+          <button type="button" onClick={() => setOpen(false)} className="p-2 -mr-2 text-ink-3 hover:text-brand-blue hover:bg-light-bg rounded-full transition-colors"><Icon.X size={20} /></button>
+        </div>
+
+        {items.length === 0 ?
+          <div className="flex-1 flex flex-col items-center justify-center text-center px-8 gap-4">
+            <div className="w-16 h-16 rounded-full bg-brand-blue-light flex items-center justify-center text-brand-blue"><Icon.Bag size={28} /></div>
+            <p className="font-serif text-lg text-ink">Giỏ hàng đang trống</p>
+            <p className="font-sans text-sm text-ink-2 leading-relaxed max-w-[240px]">Khám phá dược mỹ phẩm chọn lọc và thêm sản phẩm yêu thích vào giỏ.</p>
+            <a href="shop.html" onClick={() => setOpen(false)} className="mt-2 px-7 py-3 bg-ink text-white font-sans text-[10px] font-bold tracking-[0.18em] uppercase rounded-sm hover:bg-brand-blue transition-colors">Khám phá sản phẩm</a>
+          </div> :
+
+          <>
+            <div className="flex items-center justify-between px-6 py-3 border-b border-divider shrink-0">
+              <button type="button" onClick={() => (allSelected ? deselectAll() : selectAll())} className="flex items-center gap-2 font-sans text-[11px] font-bold tracking-wider text-ink-2 hover:text-brand-blue uppercase">
+                <span className={`w-4 h-4 rounded-sm border flex items-center justify-center ${allSelected ? 'bg-brand-blue border-brand-blue text-white' : 'border-divider text-transparent'}`}><Icon.Check size={11} /></span>
+                Chọn tất cả
+              </button>
+              <span className="font-sans text-[11px] text-ink-3">{selectedCount}/{count} đã chọn</span>
+            </div>
+            <div className="flex-1 overflow-y-auto px-6 no-scrollbar">
+              {items.map((it) => <CartLineRow key={it.id} item={it} checked={isSelected(it.id)} onToggle={toggleSelect} onQty={setQty} onRemove={remove} />)}
+            </div>
+            <div className="shrink-0 border-t border-divider px-6 py-5 space-y-4 bg-mist">
+              <div className="flex items-center justify-between">
+                <span className="font-sans text-[13px] text-ink-2">Tạm tính ({selectedCount} sản phẩm)</span>
+                <span className="font-serif text-xl font-bold text-ink">{vnd(selectedSubtotal)}</span>
+              </div>
+              <p className="font-sans text-[11px] text-ink-3 leading-relaxed flex items-start gap-1.5"><Icon.Shield size={13} className="text-brand-blue shrink-0 mt-0.5" />Phí vận chuyển &amp; thanh toán cuối cùng được nhân viên Lennie xác nhận khi liên hệ.</p>
+              <div className="space-y-2.5">
+                {selectedCount > 0 ?
+                  <a href="checkout.html" onClick={() => setOpen(false)} className="w-full py-3.5 bg-brand-blue text-white font-sans text-[10px] font-bold tracking-[0.2em] uppercase rounded-sm hover:bg-ink transition-colors flex items-center justify-center gap-2"><Icon.ArrowR size={15} />Thanh toán</a> :
+                  <button type="button" disabled className="w-full py-3.5 bg-divider text-ink-3 font-sans text-[10px] font-bold tracking-[0.2em] uppercase rounded-sm flex items-center justify-center gap-2 cursor-not-allowed"><Icon.ArrowR size={15} />Thanh toán</button>
+                }
+                <a href="cart.html" onClick={() => setOpen(false)} className="w-full py-3 border border-brand-blue text-brand-blue font-sans text-[10px] font-bold tracking-[0.18em] uppercase rounded-sm hover:bg-brand-blue-light transition-colors flex items-center justify-center">Xem giỏ hàng</a>
+              </div>
+            </div>
+          </>
+        }
+      </aside>
+    </>);
+
+}
+
 /* ---------------- NAVBAR (multi-page, centered logo) ---------------- */
 /* Centered-logo navbar (Homepage v2 layout) — multi-page links split L/R */
 const NAV_LEFT = [
@@ -31,6 +225,8 @@ function NavLink({ label, href, key1, active }) {
 function Navbar({ onOpenBooking, onOpenQuiz, cartCount = 0, active = 'home' }) {
   const [open, setOpen] = useStateC(false);
   const [scrolled, setScrolled] = useStateC(false);
+  const { count: liveCount } = useCart();
+  const cnt = liveCount || cartCount;
   useEffectC(() => {
     const f = () => setScrolled(window.scrollY > 8);
     f();
@@ -65,10 +261,10 @@ function Navbar({ onOpenBooking, onOpenQuiz, cartCount = 0, active = 'home' }) {
           </nav>
           <div className="flex items-center gap-5">
             <button type="button" onClick={onOpenQuiz} className="hidden xl:block text-ink/75 hover:text-brand-blue transition-colors" title="Phân tích da"><Icon.Search size={18} stroke={1.8} /></button>
-            <a href="shop.html" className="text-ink/75 hover:text-brand-blue transition-colors relative" aria-label="Giỏ hàng">
+            <button type="button" onClick={openCartDrawer} className="text-ink/75 hover:text-brand-blue transition-colors relative" aria-label="Giỏ hàng">
               <Icon.Bag size={18} stroke={1.8} />
-              <span className={`absolute -top-2 -right-2 text-white text-[9px] font-bold rounded-full w-4 h-4 flex items-center justify-center transition-all ${cartCount > 0 ? 'bg-brand-blue scale-100' : 'bg-brand-teal scale-90'}`}>{cartCount}</span>
-            </a>
+              <span className={`absolute -top-2 -right-2 text-white text-[9px] font-bold rounded-full w-4 h-4 flex items-center justify-center transition-all ${cnt > 0 ? 'bg-brand-blue scale-100' : 'bg-brand-teal scale-90'}`}>{cnt}</span>
+            </button>
             <button type="button" onClick={onOpenBooking} className="hidden sm:block whitespace-nowrap bg-brand-blue text-white font-sans text-[10px] font-bold tracking-widest px-5 py-2.5 rounded-full hover:bg-ink transition-colors uppercase">Đặt lịch</button>
           </div>
         </div>
@@ -84,6 +280,7 @@ function Navbar({ onOpenBooking, onOpenQuiz, cartCount = 0, active = 'home' }) {
         className="mt-2 bg-brand-blue text-white font-sans text-[10px] font-bold tracking-widest px-4 py-3 rounded-full uppercase">Đặt lịch tư vấn</button>
         </div>
       }
+      <CartDrawer />
     </header>);
 
 }
@@ -516,7 +713,7 @@ function PageShell({ active, children }) {
   const [toast, setToast] = useStateC({ show: false, product: null });
 
   const addToCart = (p) => {
-    setCart((c) => c + 1);
+    CartStore.add(p);
     setToast({ show: true, product: p });
     clearTimeout(window.__toastT);
     window.__toastT = setTimeout(() => setToast((t) => ({ ...t, show: false })), 1800);
@@ -626,4 +823,4 @@ function CTABand({ onOpenBooking, title, accent, text, primary, secondaryHref, s
 
 }
 
-Object.assign(window, { Navbar, PageHero, FloatingActions, CartToast, Footer, QuizModal, BookingModal, PageShell, SectionHead, StatStrip, PartnerStrip, CTABand, ConsultForm, ConsultSection, QuickFaqSection, FaqAccordion, CONSULT_SERVICES });
+Object.assign(window, { Navbar, PageHero, FloatingActions, CartToast, Footer, QuizModal, BookingModal, PageShell, SectionHead, StatStrip, PartnerStrip, CTABand, ConsultForm, ConsultSection, QuickFaqSection, FaqAccordion, CONSULT_SERVICES, CartStore, useCart, CartDrawer, openCartDrawer, vnd });

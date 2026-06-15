@@ -35,7 +35,7 @@ function AppB() {
   const [toast, setToast] = useStateAppB({ show: false, product: null });
 
   const addToCart = (p) => {
-    setCart((c) => c + 1);
+    (window.CartStore || CartStore).add(p);
     setToast({ show: true, product: p });
     clearTimeout(window.__toastTB);
     window.__toastTB = setTimeout(() => setToast((t) => ({ ...t, show: false })), 1800);

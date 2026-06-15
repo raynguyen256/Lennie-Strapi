@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "frontend",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev", "--prefix", "frontend"],
+      "port": 3000
+    },
+    {
+      "name": "design",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["http-server", "Web Lennie Design", "-p", "4300", "-c-1"],
+      "port": 4300
+    }
+  ]
+}
