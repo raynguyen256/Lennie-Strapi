@@ -126,6 +126,7 @@ license.txt
 exports
 .strapi
 dist
-build
+# build — commented out so pre-built admin panel can be committed for Render deployment
+# build
 .strapi-updater.json
 .strapi-cloud.json
