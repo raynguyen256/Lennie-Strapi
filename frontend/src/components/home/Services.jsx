@@ -31,13 +31,13 @@ export default function Services({ slides, onOpenBooking }) {
                 idx === i ? "opacity-100 translate-y-0 scale-100 z-20" : "opacity-0 translate-y-8 scale-[0.96] pointer-events-none z-10"
               }`}
             >
-              <span className="inline-block self-start font-sans text-[10px] md:text-[11px] font-black tracking-[0.22em] text-brand-blue uppercase bg-brand-blue/10 px-3 py-1.5 rounded" style={{ color: "rgb(255, 255, 255)" }}>
+              <span className="inline-block self-start font-sans text-[10px] md:text-[11px] font-black tracking-[0.22em] text-brand-blue uppercase bg-brand-blue/10 px-3 py-1.5 rounded">
                 {s.tag}
               </span>
-              <h2 className="font-serif text-2xl md:text-[32px] leading-[1.15] text-ink font-bold tracking-tight" style={{ color: "rgb(255, 255, 255)" }}>
+              <h2 className="font-serif text-2xl md:text-[32px] leading-[1.15] text-ink font-bold tracking-tight">
                 {s.title}
               </h2>
-              <p className="font-sans text-[13px] md:text-sm md:leading-[1.75] text-ink-2 font-medium" style={{ color: "rgb(255, 255, 255)" }}>
+              <p className="font-sans text-[13px] md:text-sm md:leading-[1.75] text-ink-2 font-medium">
                 {s.desc}
               </p>
               <button
