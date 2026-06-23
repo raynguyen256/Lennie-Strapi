@@ -32,7 +32,7 @@ export function openMessengerWith(msg) {
   window.open(MESSENGER_URL, "_blank", "noopener");
 }
 
-export default function ConsultForm({ defaultService = "routine", lockedServiceLabel = null, buttonLabel = "Gửi & tư vấn qua Messenger", onClose }) {
+export default function ConsultForm({ defaultService = "routine", lockedServiceLabel = null, buttonLabel = "Gửi & tư vấn qua Messenger", source = "contact-page", onClose }) {
   const [name, setName] = useState("");
   const [skin, setSkin] = useState("");
   const [service, setService] = useState(defaultService);
@@ -42,6 +42,11 @@ export default function ConsultForm({ defaultService = "routine", lockedServiceL
   const msg = buildConsultMessage({ name, skin, serviceLabel, phone });
   const submit = (e) => {
     e.preventDefault();
+    fetch("/api/leads", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, phone, skinCondition: skin, serviceInterest: serviceLabel, source }),
+    }).catch((err) => console.error("[ConsultForm] lead submit failed", err));
     openMessengerWith(msg);
     setSent(true);
   };

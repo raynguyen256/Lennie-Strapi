@@ -18,8 +18,12 @@
 
 - **Backend:** `Strapi v5.48.0`, self-hosted (`--skip-cloud`), SQLite cho dev (path nâng cấp Postgres cho production)
 - **Frontend:** `Next.js 16.2.9` (App Router, JS, Turbopack), `React 19.2.4`, `Tailwind CSS v4`
-- **Lead capture MVP:** `ConsultForm` (đã build) → mở Messenger với message soạn sẵn; CTA dự phòng Zalo/Hotline
-- **Shop MVP:** collection `product` trong Strapi, catalog-first (chưa checkout thật)
+- **Lead capture (2026-06-23):** `ConsultForm`/`BookingModal` ghi vào Strapi (`contact-lead`) qua `frontend/src/app/api/leads/route.js`, song song vẫn mở Messenger với message soạn sẵn (dual-channel) — không còn chỉ là MVP Messenger-only
+- **Shop / checkout (2026-06-23):** đơn từ `/checkout` ghi vào Strapi (`order`) qua `frontend/src/app/api/orders/route.js`; collection `product` vẫn catalog-first nhưng đơn hàng nay là bản ghi thật, không còn chỉ tồn tại trong localStorage
+- **Booking tại cơ sở (2026-06-23):** `BookingForm` ghi vào Strapi (`booking`) qua `frontend/src/app/api/bookings/route.js`
+- **Newsletter (2026-06-23):** form ở Footer ghi vào Strapi (`newsletter-subscriber`) qua `frontend/src/app/api/newsletter/route.js`
+- **Ghi dữ liệu (write path):** không mở public `create` trên Strapi — Next.js Route Handlers giữ `STRAPI_API_TOKEN` (server-only) và proxy ghi sang Strapi; có rate-limit theo IP (in-memory, xem `frontend/src/lib/rateLimit.js`)
+- **Thông báo nội bộ:** khi có order/booking/contact-lead/newsletter-subscriber mới, Strapi lifecycle `afterCreate` gọi `backend/src/utils/notify.js` để bắn tin qua Zalo OA / Messenger cho nhân viên — token/recipient cấu hình trong Strapi admin ở trang Single Type **Notification Setting** (`api::notification-setting.notification-setting`), không qua env var. Nếu chưa cấu hình, notify tự động no-op, không ảnh hưởng việc tạo bản ghi.
 
 > ⚠️ Ràng buộc cứng: **Strapi phải self-host được**. Không dùng Strapi Cloud, không phụ thuộc tính năng chỉ-cloud.
 
@@ -128,15 +132,20 @@ Lennie SkinLab là thương hiệu chuyên sâu trong lĩnh vực chăm sóc và
 
 ### Booking / lead capture
 
-#### MVP
+#### Hiện tại (từ 2026-06-23)
 
-- `ConsultForm`/`BookingModal` (đã build) thu thập tên, loại da, dịch vụ quan tâm, SĐT → build message → mở Messenger
-- Song song đó vẫn có CTA sang Messenger / Zalo / Hotline (từ `general-setting`)
-- Không triển khai checkout hoặc đặt cọc online trong sprint đầu
+- `ConsultForm`/`BookingModal` thu thập tên, loại da, dịch vụ quan tâm, SĐT → ghi vào Strapi (`contact-lead`, có field `source` phân biệt contact-page/booking-modal) qua `/api/leads`, **đồng thời** vẫn build message → mở Messenger (dual-channel, không thay thế nhau)
+- `BookingForm` (đặt lịch tại cơ sở) ghi vào Strapi (`booking`) qua `/api/bookings`, lưu snapshot service/branch + optional relation tới `service`/`branch` để truy vết
+- `/checkout` ghi đơn vào Strapi (`order`) qua `/api/orders`, sinh mã đơn server-side
+- Newsletter (Footer) ghi vào Strapi (`newsletter-subscriber`) qua `/api/newsletter`
+- Tất cả 4 write-path trên đi qua Next.js Route Handler (giữ `STRAPI_API_TOKEN` server-only), **không** mở public `create` trên Strapi; có rate-limit theo IP
+- Khi có bản ghi mới, Strapi lifecycle gọi `notify.js` bắn thông báo Zalo OA / Messenger cho nhân viên — cấu hình token tại trang admin **Notification Setting** (single type), chưa cấu hình thì no-op an toàn
+- CTA sang Messenger / Zalo / Hotline (từ `general-setting`) vẫn giữ nguyên như kênh dự phòng
 
 #### Phase sau
 
-- Chỉ cân nhắc booking chọn khung giờ khi business flow rõ hơn
+- Cân nhắc trang "tra cứu đơn hàng" công khai (hiện chưa có read-back cho khách)
+- Khi đã có Zalo OA / FB Page thật, vào Strapi admin điền token vào **Notification Setting** để bật thông báo
 
 ---
 

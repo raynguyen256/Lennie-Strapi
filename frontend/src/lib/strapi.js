@@ -1,7 +1,12 @@
-const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
+const STRAPI_PUBLIC_URL = process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
+const STRAPI_INTERNAL_URL = process.env.STRAPI_INTERNAL_URL || STRAPI_PUBLIC_URL;
 
 export function getStrapiURL(path = "") {
-  return `${STRAPI_URL}${path}`;
+  return `${STRAPI_PUBLIC_URL}${path}`;
+}
+
+function getStrapiInternalURL(path = "") {
+  return `${STRAPI_INTERNAL_URL}${path}`;
 }
 
 /** Trả về URL tuyệt đối cho 1 media object của Strapi (ưu tiên format được chỉ định) */
@@ -48,7 +53,7 @@ function toQueryString(params, prefix = "") {
  */
 export async function fetchAPI(path, params = {}, options = {}) {
   const query = toQueryString(params);
-  const url = getStrapiURL(`/api${path}${query ? `?${query}` : ""}`);
+  const url = getStrapiInternalURL(`/api${path}${query ? `?${query}` : ""}`);
 
   try {
     const res = await fetch(url, {

@@ -77,7 +77,7 @@ export default function ContactView({ content }) {
             </div>
           </div>
           <div className="lg:col-span-7 bg-brand-blue-light border border-divider p-7 md:p-9 rounded-md shadow-sm">
-            <ConsultForm buttonLabel="Gửi yêu cầu tư vấn" />
+            <ConsultForm buttonLabel="Gửi yêu cầu tư vấn" source="contact-page" />
           </div>
         </div>
       </section>

@@ -478,6 +478,48 @@ export interface ApiBlogPostBlogPost extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiBookingBooking extends Struct.CollectionTypeSchema {
+  collectionName: 'bookings';
+  info: {
+    description: 'Dat lich tai co so';
+    displayName: 'Booking';
+    pluralName: 'bookings';
+    singularName: 'booking';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    branch: Schema.Attribute.Relation<'manyToOne', 'api::branch.branch'>;
+    branchName: Schema.Attribute.String;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    customerName: Schema.Attribute.String & Schema.Attribute.Required;
+    customerPhone: Schema.Attribute.String & Schema.Attribute.Required;
+    date: Schema.Attribute.Date & Schema.Attribute.Required;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::booking.booking'
+    > &
+      Schema.Attribute.Private;
+    notes: Schema.Attribute.Text;
+    publishedAt: Schema.Attribute.DateTime;
+    service: Schema.Attribute.Relation<'manyToOne', 'api::service.service'>;
+    serviceName: Schema.Attribute.String;
+    serviceSlug: Schema.Attribute.String;
+    status: Schema.Attribute.Enumeration<
+      ['pending', 'confirmed', 'cancelled']
+    > &
+      Schema.Attribute.DefaultTo<'pending'>;
+    time: Schema.Attribute.String & Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiBranchBranch extends Struct.CollectionTypeSchema {
   collectionName: 'branches';
   info: {
@@ -541,6 +583,42 @@ export interface ApiContactInfoContactInfo extends Struct.SingleTypeSchema {
     openingHours: Schema.Attribute.Component<'shared.opening-hours', true>;
     publishedAt: Schema.Attribute.DateTime;
     tiktokUrl: Schema.Attribute.String;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiContactLeadContactLead extends Struct.CollectionTypeSchema {
+  collectionName: 'contact_leads';
+  info: {
+    description: 'Lead tu form tu van / lien he';
+    displayName: 'Contact Lead';
+    pluralName: 'contact-leads';
+    singularName: 'contact-lead';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::contact-lead.contact-lead'
+    > &
+      Schema.Attribute.Private;
+    name: Schema.Attribute.String & Schema.Attribute.Required;
+    phone: Schema.Attribute.String & Schema.Attribute.Required;
+    publishedAt: Schema.Attribute.DateTime;
+    serviceInterest: Schema.Attribute.String;
+    skinCondition: Schema.Attribute.Text & Schema.Attribute.Required;
+    source: Schema.Attribute.Enumeration<['contact-page', 'booking-modal']> &
+      Schema.Attribute.DefaultTo<'contact-page'>;
+    status: Schema.Attribute.Enumeration<['new', 'contacted', 'closed']> &
+      Schema.Attribute.DefaultTo<'new'>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -717,6 +795,118 @@ export interface ApiHomepageHomepage extends Struct.SingleTypeSchema {
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+  };
+}
+
+export interface ApiNewsletterSubscriberNewsletterSubscriber
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'newsletter_subscribers';
+  info: {
+    description: 'Email dang ky nhan tin tu footer';
+    displayName: 'Newsletter Subscriber';
+    pluralName: 'newsletter-subscribers';
+    singularName: 'newsletter-subscriber';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    email: Schema.Attribute.Email &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::newsletter-subscriber.newsletter-subscriber'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiNotificationSettingNotificationSetting
+  extends Struct.SingleTypeSchema {
+  collectionName: 'notification_settings';
+  info: {
+    description: 'Cau hinh gui thong bao Zalo OA / Messenger cho nhan vien';
+    displayName: 'Notification Setting';
+    pluralName: 'notification-settings';
+    singularName: 'notification-setting';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    enableMessenger: Schema.Attribute.Boolean &
+      Schema.Attribute.DefaultTo<false>;
+    enableZalo: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::notification-setting.notification-setting'
+    > &
+      Schema.Attribute.Private;
+    messengerPageToken: Schema.Attribute.String & Schema.Attribute.Private;
+    messengerRecipientId: Schema.Attribute.String;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    zaloAccessToken: Schema.Attribute.String & Schema.Attribute.Private;
+    zaloOaUserId: Schema.Attribute.String;
+  };
+}
+
+export interface ApiOrderOrder extends Struct.CollectionTypeSchema {
+  collectionName: 'orders';
+  info: {
+    description: 'Don mua tu checkout';
+    displayName: 'Order';
+    pluralName: 'orders';
+    singularName: 'order';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    code: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    customerEmail: Schema.Attribute.String;
+    customerName: Schema.Attribute.String & Schema.Attribute.Required;
+    customerPhone: Schema.Attribute.String & Schema.Attribute.Required;
+    district: Schema.Attribute.String;
+    itemCount: Schema.Attribute.Integer;
+    items: Schema.Attribute.JSON;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<'oneToMany', 'api::order.order'> &
+      Schema.Attribute.Private;
+    note: Schema.Attribute.Text;
+    paymentMethod: Schema.Attribute.Enumeration<['cod', 'bank', 'staff']>;
+    province: Schema.Attribute.String;
+    publishedAt: Schema.Attribute.DateTime;
+    status: Schema.Attribute.Enumeration<
+      ['pending', 'confirmed', 'cancelled']
+    > &
+      Schema.Attribute.DefaultTo<'pending'>;
+    street: Schema.Attribute.String;
+    subtotal: Schema.Attribute.Decimal;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    ward: Schema.Attribute.String;
   };
 }
 
@@ -1689,13 +1879,18 @@ declare module '@strapi/strapi' {
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'admin::user': AdminUser;
       'api::blog-post.blog-post': ApiBlogPostBlogPost;
+      'api::booking.booking': ApiBookingBooking;
       'api::branch.branch': ApiBranchBranch;
       'api::contact-info.contact-info': ApiContactInfoContactInfo;
+      'api::contact-lead.contact-lead': ApiContactLeadContactLead;
       'api::faq-category.faq-category': ApiFaqCategoryFaqCategory;
       'api::faq.faq': ApiFaqFaq;
       'api::founder.founder': ApiFounderFounder;
       'api::general-setting.general-setting': ApiGeneralSettingGeneralSetting;
       'api::homepage.homepage': ApiHomepageHomepage;
+      'api::newsletter-subscriber.newsletter-subscriber': ApiNewsletterSubscriberNewsletterSubscriber;
+      'api::notification-setting.notification-setting': ApiNotificationSettingNotificationSetting;
+      'api::order.order': ApiOrderOrder;
       'api::partner-brand.partner-brand': ApiPartnerBrandPartnerBrand;
       'api::product-tag.product-tag': ApiProductTagProductTag;
       'api::product.product': ApiProductProduct;

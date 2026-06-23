@@ -43,15 +43,16 @@ export default function Navbar({ onOpenBooking, onOpenQuiz, active = "home" }) {
   }, []);
 
   return (
-    <header
-      style={{
-        ...(scrolled
-          ? undefined
-          : { background: "linear-gradient(to bottom, #ffffff 34%, rgba(255,255,255,0))" }),
-        borderWidth: "0px",
-      }}
-      className={`w-full fixed top-0 inset-x-0 z-50 transition-all duration-300 ${scrolled ? "bg-white/95 backdrop-blur-md shadow-[0_6px_30px_rgba(44,74,111,.08)] border-b border-divider" : "border-b border-transparent"}`}
-    >
+    <>
+      <header
+        style={{
+          ...(scrolled
+            ? undefined
+            : { background: "linear-gradient(to bottom, #ffffff 34%, rgba(255,255,255,0))" }),
+          borderWidth: "0px",
+        }}
+        className={`w-full fixed top-0 inset-x-0 z-50 transition-all duration-300 ${scrolled ? "bg-white/95 backdrop-blur-md shadow-[0_6px_30px_rgba(44,74,111,.08)] border-b border-divider" : "border-b border-transparent"}`}
+      >
       <div className="max-w-7xl mx-auto px-6 h-[104px] grid grid-cols-[1fr_auto_1fr] items-center gap-6">
         <nav className="hidden lg:flex items-center gap-9 justify-start">
           {NAV_LEFT.map(([t, h, k]) => (
@@ -128,7 +129,8 @@ export default function Navbar({ onOpenBooking, onOpenQuiz, active = "home" }) {
           </button>
         </div>
       )}
+      </header>
       <CartDrawer />
-    </header>
+    </>
   );
 }

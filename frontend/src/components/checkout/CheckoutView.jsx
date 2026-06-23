@@ -169,6 +169,8 @@ function CheckoutContent() {
   const [payment, setPayment] = useState("cod");
   const [touched, setTouched] = useState(false);
   const [order, setOrder] = useState(null);
+  const [placing, setPlacing] = useState(false);
+  const [orderError, setOrderError] = useState(null);
 
   const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
   const required = ["name", "phone", "province", "district", "ward", "street"];
@@ -185,12 +187,38 @@ function CheckoutContent() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const placeOrder = () => {
+  const placeOrder = async () => {
     const pm = PAYMENT_METHODS.find((m) => m.id === payment);
-    const code = "LN-" + Math.floor(100000 + Math.random() * 900000);
     const address = [form.street, form.ward, form.district, form.province].filter(Boolean).join(", ");
-    setOrder({ code, name: form.name, phone: form.phone, count: selectedCount, subtotal: selectedSubtotal, paymentLabel: pm.label, address });
-    removeMany(selectedItems.map((i) => i.id));
+    setOrderError(null);
+    setPlacing(true);
+    try {
+      const res = await fetch("/api/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: form.name,
+          phone: form.phone,
+          email: form.email,
+          province: form.province,
+          district: form.district,
+          ward: form.ward,
+          street: form.street,
+          note: form.note,
+          items: selectedItems.map((i) => ({ id: i.id, slug: i.slug, name: i.name, brand: i.brand, price: i.price, qty: i.qty })),
+          paymentMethod: payment,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Đặt hàng thất bại");
+
+      setOrder({ code: data.code, name: form.name, phone: form.phone, count: selectedCount, subtotal: selectedSubtotal, paymentLabel: pm.label, address });
+      removeMany(selectedItems.map((i) => i.id));
+    } catch (err) {
+      setOrderError(err.message || "Đặt hàng thất bại, vui lòng thử lại.");
+    } finally {
+      setPlacing(false);
+    }
   };
 
   // Empty cart (and no completed order) → prompt to shop
@@ -361,13 +389,20 @@ function CheckoutContent() {
                   </p>
                 </div>
 
+                {orderError && (
+                  <p className="font-sans text-[12px] text-red-500 flex items-center gap-1.5">
+                    <Icon.X size={14} />
+                    {orderError}
+                  </p>
+                )}
                 <div className="flex flex-col sm:flex-row gap-3 pt-2">
-                  <button type="button" onClick={placeOrder} className="px-9 py-4 bg-brand-blue text-white font-sans text-[10px] font-bold tracking-[0.2em] uppercase rounded-sm hover:bg-ink transition-colors flex items-center justify-center gap-2">
+                  <button type="button" disabled={placing} onClick={placeOrder} className="px-9 py-4 bg-brand-blue text-white font-sans text-[10px] font-bold tracking-[0.2em] uppercase rounded-sm hover:bg-ink transition-colors flex items-center justify-center gap-2 disabled:opacity-60">
                     <Icon.Check size={16} />
-                    Đặt hàng
+                    {placing ? "Đang xử lý..." : "Đặt hàng"}
                   </button>
                   <button
                     type="button"
+                    disabled={placing}
                     onClick={() => {
                       setStep(0);
                       window.scrollTo({ top: 0, behavior: "smooth" });

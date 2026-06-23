@@ -7,15 +7,30 @@ import { Icon } from "@/lib/icons";
 export default function Footer() {
   const [email, setEmail] = useState("");
   const [sub, setSub] = useState(false);
+  const [subMsg, setSubMsg] = useState("Đăng ký thành công!");
+  const [error, setError] = useState(null);
 
-  const go = (e) => {
+  const go = async (e) => {
     e.preventDefault();
     if (!email) return;
-    setSub(true);
-    setTimeout(() => {
-      setEmail("");
-      setSub(false);
-    }, 4000);
+    setError(null);
+    try {
+      const res = await fetch("/api/newsletter", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Đăng ký thất bại");
+      setSubMsg(data.duplicate ? "Email này đã có trong danh sách." : "Đăng ký thành công!");
+      setSub(true);
+      setTimeout(() => {
+        setEmail("");
+        setSub(false);
+      }, 4000);
+    } catch (err) {
+      setError(err.message || "Đăng ký thất bại, vui lòng thử lại.");
+    }
   };
 
   return (
@@ -80,7 +95,13 @@ export default function Footer() {
             {sub && (
               <div className="flex items-center gap-1.5 text-sm text-brand-blue pt-1 font-semibold">
                 <Icon.Check size={16} />
-                <span>Đăng ký thành công!</span>
+                <span>{subMsg}</span>
+              </div>
+            )}
+            {error && (
+              <div className="flex items-center gap-1.5 text-sm text-red-500 pt-1 font-semibold">
+                <Icon.X size={16} />
+                <span>{error}</span>
               </div>
             )}
           </div>

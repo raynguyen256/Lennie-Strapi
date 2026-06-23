@@ -14,6 +14,8 @@ export default function BookingForm({ services, branches, defaultService }) {
   const [phone, setPhone] = useState("");
   const [notes, setNotes] = useState("");
   const [booked, setBooked] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState(null);
   const today = new Date().toISOString().split("T")[0];
   const sName = services.find((s) => s.slug === service)?.title || "";
 
@@ -22,11 +24,35 @@ export default function BookingForm({ services, branches, defaultService }) {
     setService(defaultService);
   }
 
-  const submit = (e) => {
+  const submit = async (e) => {
     e.preventDefault();
     if (!date || !time || !name || !phone) return;
-    setBooked(true);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    setError(null);
+    setSubmitting(true);
+    try {
+      const res = await fetch("/api/bookings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          serviceSlug: service,
+          serviceName: sName,
+          branchName: branches[branch]?.name,
+          date,
+          time,
+          name,
+          phone,
+          notes,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Đặt lịch thất bại");
+      setBooked(true);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } catch (err) {
+      setError(err.message || "Đặt lịch thất bại, vui lòng thử lại.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const reset = () => {
@@ -132,8 +158,14 @@ export default function BookingForm({ services, branches, defaultService }) {
           className="w-full p-3.5 bg-mist border border-divider rounded-sm text-sm focus:outline-none focus:border-brand-blue text-ink resize-none placeholder-ink-3/60"
         ></textarea>
       </div>
-      <button type="submit" className="w-full py-4 bg-brand-blue text-white font-sans text-[10px] font-bold tracking-[0.2em] uppercase rounded-sm hover:bg-ink transition-all shadow-sm">
-        Xác nhận đặt lịch
+      {error && (
+        <p className="font-sans text-[12px] text-red-500 flex items-center gap-1.5">
+          <Icon.X size={14} />
+          {error}
+        </p>
+      )}
+      <button type="submit" disabled={submitting} className="w-full py-4 bg-brand-blue text-white font-sans text-[10px] font-bold tracking-[0.2em] uppercase rounded-sm hover:bg-ink transition-all shadow-sm disabled:opacity-60">
+        {submitting ? "Đang xử lý..." : "Xác nhận đặt lịch"}
       </button>
       <p className="font-sans text-[11px] text-ink-3 text-center">Thanh toán tại chỗ · Không cần đặt cọc online</p>
     </form>

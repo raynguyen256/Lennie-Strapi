@@ -1,0 +1,41 @@
+{
+  "kind": "collectionType",
+  "collectionName": "contact_leads",
+  "info": {
+    "singularName": "contact-lead",
+    "pluralName": "contact-leads",
+    "displayName": "Contact Lead",
+    "description": "Lead tu form tu van / lien he"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "phone": {
+      "type": "string",
+      "required": true
+    },
+    "skinCondition": {
+      "type": "text",
+      "required": true
+    },
+    "serviceInterest": {
+      "type": "string"
+    },
+    "source": {
+      "type": "enumeration",
+      "enum": ["contact-page", "booking-modal"],
+      "default": "contact-page"
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": ["new", "contacted", "closed"],
+      "default": "new"
+    }
+  }
+}

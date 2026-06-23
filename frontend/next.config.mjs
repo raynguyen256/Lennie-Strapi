@@ -2,6 +2,7 @@ const strapiUrl = new URL(process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhos
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: "standalone",
   images: {
     remotePatterns: [
       {

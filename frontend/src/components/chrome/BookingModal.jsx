@@ -19,7 +19,7 @@ export default function BookingModal({ isOpen, onClose, presetService }) {
             <h3 className="font-serif text-2xl font-semibold text-ink mt-2">Lennie SkinLab Clinic</h3>
             <p className="font-sans text-xs text-ink-3 mt-1">Để lại thông tin — Lennie tư vấn tiếp qua Messenger</p>
           </div>
-          <ConsultForm defaultService={defaultService} onClose={onClose} />
+          <ConsultForm defaultService={defaultService} source="booking-modal" onClose={onClose} />
         </div>
       </div>
     </div>

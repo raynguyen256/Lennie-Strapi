@@ -1,6 +1,7 @@
 'use strict';
 
 const { seed } = require('./seed');
+const { seedAdminLayouts } = require('./admin-layouts');
 
 const COLLECTION_PERMISSIONS = [
   'service',
@@ -72,6 +73,12 @@ module.exports = {
     } catch (err) {
       strapi.log.error(`[seed] failed: ${err.message}`);
       strapi.log.error(err.stack);
+    }
+
+    try {
+      await seedAdminLayouts(strapi);
+    } catch (err) {
+      strapi.log.error(`[admin-layouts] failed: ${err.message}`);
     }
   },
 };

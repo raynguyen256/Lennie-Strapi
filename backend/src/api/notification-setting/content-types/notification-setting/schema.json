@@ -1,0 +1,38 @@
+{
+  "kind": "singleType",
+  "collectionName": "notification_settings",
+  "info": {
+    "singularName": "notification-setting",
+    "pluralName": "notification-settings",
+    "displayName": "Notification Setting",
+    "description": "Cau hinh gui thong bao Zalo OA / Messenger cho nhan vien"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "enableZalo": {
+      "type": "boolean",
+      "default": false
+    },
+    "zaloAccessToken": {
+      "type": "string",
+      "private": true
+    },
+    "zaloOaUserId": {
+      "type": "string"
+    },
+    "enableMessenger": {
+      "type": "boolean",
+      "default": false
+    },
+    "messengerPageToken": {
+      "type": "string",
+      "private": true
+    },
+    "messengerRecipientId": {
+      "type": "string"
+    }
+  }
+}
