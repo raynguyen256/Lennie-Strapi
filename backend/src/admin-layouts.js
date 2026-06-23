@@ -60,7 +60,9 @@ const notificationSettingConfig = {
 
 async function seedAdminLayouts(strapi) {
   const contentTypesService = strapi.plugin('content-manager').service('content-types');
-  await contentTypesService.setConfiguration(NOTIFICATION_SETTING_UID, notificationSettingConfig);
+  const contentType = contentTypesService.findContentType(NOTIFICATION_SETTING_UID);
+  if (!contentType) return;
+  await contentTypesService.updateConfiguration(contentType, notificationSettingConfig);
 }
 
 module.exports = { seedAdminLayouts };
