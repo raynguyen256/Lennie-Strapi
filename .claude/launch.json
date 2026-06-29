@@ -12,6 +12,13 @@
       "runtimeExecutable": "npx",
       "runtimeArgs": ["http-server", "Web Lennie Design", "-p", "4300", "-c-1"],
       "port": 4300
+    },
+    {
+      "name": "backend",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "develop", "--prefix", "backend"],
+      "port": 1337,
+      "autoPort": true
     }
   ]
 }

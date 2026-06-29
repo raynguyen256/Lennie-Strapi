@@ -1,0 +1,1190 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Lennie Strapi Admin UX Preview</title>
+    <style>
+      :root {
+        --bg: #f4f8fb;
+        --panel: #ffffff;
+        --panel-soft: #eef5fb;
+        --line: #d7e4f0;
+        --line-strong: #bfd2e3;
+        --text: #17324a;
+        --muted: #627d95;
+        --brand: #5f89b7;
+        --brand-strong: #3f6f9f;
+        --accent: #d9ebf8;
+        --success: #dff4e6;
+        --warning: #fff2d8;
+        --shadow: 0 18px 40px rgba(25, 56, 88, 0.08);
+        --radius-xl: 28px;
+        --radius-lg: 20px;
+        --radius-md: 14px;
+        --radius-sm: 10px;
+        --font: "Plus Jakarta Sans", "Segoe UI", sans-serif;
+        --font-serif: "Spectral", Georgia, serif;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background:
+          radial-gradient(circle at top left, rgba(135, 193, 233, 0.32), transparent 28%),
+          linear-gradient(180deg, #f8fbfe 0%, var(--bg) 100%);
+        color: var(--text);
+        font-family: var(--font);
+      }
+
+      .app-shell {
+        min-height: 100vh;
+        display: grid;
+        grid-template-columns: 290px 1fr;
+      }
+
+      .sidebar {
+        background: linear-gradient(180deg, #14324f 0%, #1d4368 100%);
+        color: #f5fbff;
+        padding: 28px 20px;
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 8px 6px 14px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .brand-mark {
+        width: 48px;
+        height: 48px;
+        border-radius: 16px;
+        background: linear-gradient(135deg, #8dc3e8 0%, #5f89b7 100%);
+        display: grid;
+        place-items: center;
+        color: white;
+        font-size: 24px;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);
+      }
+
+      .brand h1 {
+        margin: 0;
+        font-size: 17px;
+        line-height: 1.2;
+        font-weight: 700;
+      }
+
+      .brand p {
+        margin: 4px 0 0;
+        font-size: 12px;
+        color: rgba(245, 251, 255, 0.72);
+      }
+
+      .nav-group-label {
+        margin: 6px 8px 0;
+        font-size: 11px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: rgba(245, 251, 255, 0.58);
+      }
+
+      .nav {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .nav button {
+        width: 100%;
+        border: 0;
+        background: transparent;
+        color: inherit;
+        text-align: left;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 13px 14px;
+        border-radius: 16px;
+        cursor: pointer;
+        transition: 180ms ease;
+      }
+
+      .nav button:hover {
+        background: rgba(255, 255, 255, 0.08);
+      }
+
+      .nav button.active {
+        background: rgba(255, 255, 255, 0.14);
+        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+      }
+
+      .nav-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 12px;
+        display: grid;
+        place-items: center;
+        font-size: 18px;
+        background: rgba(255, 255, 255, 0.12);
+        flex: 0 0 auto;
+      }
+
+      .nav-copy strong {
+        display: block;
+        font-size: 14px;
+      }
+
+      .nav-copy span {
+        display: block;
+        margin-top: 3px;
+        font-size: 12px;
+        color: rgba(245, 251, 255, 0.7);
+      }
+
+      .sidebar-note {
+        margin-top: auto;
+        padding: 16px;
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.09);
+      }
+
+      .sidebar-note strong {
+        display: block;
+        font-size: 13px;
+        margin-bottom: 6px;
+      }
+
+      .sidebar-note p {
+        margin: 0;
+        font-size: 12px;
+        line-height: 1.6;
+        color: rgba(245, 251, 255, 0.72);
+      }
+
+      .workspace {
+        padding: 28px;
+      }
+
+      .topbar {
+        display: grid;
+        grid-template-columns: 1fr auto auto;
+        gap: 16px;
+        align-items: center;
+        margin-bottom: 22px;
+      }
+
+      .search {
+        background: rgba(255, 255, 255, 0.78);
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        padding: 14px 18px;
+        color: var(--muted);
+        box-shadow: var(--shadow);
+      }
+
+      .pill {
+        border-radius: 999px;
+        border: 1px solid var(--line-strong);
+        background: rgba(255, 255, 255, 0.82);
+        padding: 12px 16px;
+        color: var(--text);
+        font-size: 13px;
+        box-shadow: var(--shadow);
+      }
+
+      .hero {
+        background:
+          linear-gradient(135deg, rgba(95, 137, 183, 0.16), rgba(135, 193, 233, 0.14)),
+          var(--panel);
+        border: 1px solid var(--line);
+        border-radius: var(--radius-xl);
+        padding: 28px;
+        box-shadow: var(--shadow);
+      }
+
+      .hero-label {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 12px;
+        border-radius: 999px;
+        background: var(--panel-soft);
+        color: var(--brand-strong);
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+
+      .hero h2 {
+        margin: 18px 0 10px;
+        font-size: clamp(28px, 4vw, 44px);
+        line-height: 1.08;
+        font-family: var(--font-serif);
+      }
+
+      .hero p {
+        margin: 0;
+        max-width: 760px;
+        color: var(--muted);
+        line-height: 1.8;
+        font-size: 15px;
+      }
+
+      .hero-meta {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-top: 20px;
+      }
+
+      .hero-meta span {
+        padding: 10px 14px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.84);
+        border: 1px solid var(--line);
+        font-size: 13px;
+      }
+
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 16px;
+        margin-top: 20px;
+      }
+
+      .stat {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: var(--radius-lg);
+        padding: 18px;
+        box-shadow: var(--shadow);
+      }
+
+      .stat strong {
+        display: block;
+        font-size: 28px;
+        margin-bottom: 6px;
+      }
+
+      .stat span {
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .dashboard {
+        display: grid;
+        grid-template-columns: 1.2fr 1.2fr 0.9fr;
+        gap: 16px;
+        margin-top: 22px;
+      }
+
+      .dashboard-card {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: var(--radius-xl);
+        padding: 20px;
+        box-shadow: var(--shadow);
+      }
+
+      .dashboard-card h3 {
+        margin: 0;
+        font-size: 20px;
+      }
+
+      .dashboard-card p {
+        margin: 8px 0 16px;
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.7;
+      }
+
+      .metric-stack {
+        display: grid;
+        gap: 12px;
+      }
+
+      .metric-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        border: 1px solid var(--line);
+        border-radius: var(--radius-md);
+        padding: 14px 15px;
+        background: linear-gradient(180deg, #fff 0%, #f8fbfe 100%);
+      }
+
+      .metric-row strong {
+        display: block;
+        font-size: 14px;
+      }
+
+      .metric-row span {
+        display: block;
+        margin-top: 4px;
+        font-size: 12px;
+        color: var(--muted);
+      }
+
+      .metric-value {
+        font-size: 20px;
+        font-weight: 800;
+        color: var(--brand-strong);
+      }
+
+      .queue-list {
+        display: grid;
+        gap: 12px;
+      }
+
+      .queue-item {
+        border: 1px solid var(--line);
+        border-radius: var(--radius-md);
+        padding: 14px 15px;
+        background: linear-gradient(180deg, #fff 0%, #fbfdff 100%);
+      }
+
+      .queue-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 8px;
+      }
+
+      .queue-head strong {
+        font-size: 15px;
+      }
+
+      .queue-meta {
+        font-size: 12px;
+        color: var(--muted);
+        line-height: 1.7;
+      }
+
+      .status {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 7px 10px;
+        border-radius: 999px;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+
+      .status-warn {
+        background: var(--warning);
+        color: #8e5f00;
+      }
+
+      .status-ok {
+        background: var(--success);
+        color: #216745;
+      }
+
+      .status-info {
+        background: var(--panel-soft);
+        color: var(--brand-strong);
+      }
+
+      .dashboard-note {
+        margin-top: 14px;
+        padding-top: 14px;
+        border-top: 1px dashed var(--line-strong);
+        font-size: 12px;
+        color: var(--muted);
+        line-height: 1.7;
+      }
+
+      .sections {
+        display: grid;
+        gap: 18px;
+        margin-top: 24px;
+      }
+
+      .section {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: var(--radius-xl);
+        padding: 22px;
+        box-shadow: var(--shadow);
+      }
+
+      .section-header {
+        display: flex;
+        align-items: end;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 18px;
+      }
+
+      .section-header h3 {
+        margin: 0;
+        font-size: 22px;
+      }
+
+      .section-header p {
+        margin: 6px 0 0;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .section-header .hint {
+        font-size: 12px;
+        color: var(--brand-strong);
+        background: var(--panel-soft);
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        padding: 8px 12px;
+      }
+
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+      }
+
+      .card {
+        background: linear-gradient(180deg, #fff 0%, #f9fcfe 100%);
+        border: 1px solid var(--line);
+        border-radius: var(--radius-lg);
+        padding: 18px;
+      }
+
+      .card-top {
+        display: flex;
+        align-items: start;
+        justify-content: space-between;
+        gap: 14px;
+        margin-bottom: 12px;
+      }
+
+      .card-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 14px;
+        display: grid;
+        place-items: center;
+        background: var(--accent);
+        color: var(--brand-strong);
+        font-size: 20px;
+      }
+
+      .card-tag {
+        border-radius: 999px;
+        padding: 8px 10px;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--brand-strong);
+        background: #f2f8fd;
+        border: 1px solid var(--line);
+      }
+
+      .card h4 {
+        margin: 0;
+        font-size: 18px;
+      }
+
+      .card p {
+        margin: 8px 0 14px;
+        color: var(--muted);
+        line-height: 1.7;
+        font-size: 14px;
+      }
+
+      .card-actions {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .btn {
+        border-radius: 999px;
+        padding: 10px 14px;
+        font-size: 13px;
+        font-weight: 700;
+        text-decoration: none;
+        border: 1px solid transparent;
+      }
+
+      .btn-primary {
+        background: var(--brand);
+        color: white;
+      }
+
+      .btn-secondary {
+        background: #fff;
+        color: var(--text);
+        border-color: var(--line-strong);
+      }
+
+      .preview-bar {
+        margin-top: 22px;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+      }
+
+      .preview-tile {
+        border-radius: var(--radius-lg);
+        padding: 18px;
+        border: 1px solid var(--line);
+        background: var(--panel);
+        box-shadow: var(--shadow);
+      }
+
+      .preview-tile strong {
+        display: block;
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--brand-strong);
+        margin-bottom: 8px;
+      }
+
+      .preview-tile p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.7;
+        font-size: 14px;
+      }
+
+      .tone-success {
+        background: linear-gradient(180deg, #ffffff 0%, #f3fcf6 100%);
+      }
+
+      .tone-warning {
+        background: linear-gradient(180deg, #ffffff 0%, #fffaf1 100%);
+      }
+
+      .tone-soft {
+        background: linear-gradient(180deg, #ffffff 0%, #f4f9fd 100%);
+      }
+
+      @media (max-width: 1180px) {
+        .stats,
+        .preview-bar {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .dashboard {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 980px) {
+        .app-shell {
+          grid-template-columns: 1fr;
+        }
+
+        .sidebar {
+          position: relative;
+          height: auto;
+          padding-bottom: 20px;
+        }
+
+        .workspace {
+          padding: 18px;
+        }
+
+        .topbar,
+        .stats,
+        .dashboard,
+        .cards,
+        .preview-bar {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="brand-mark">✦</div>
+          <div>
+            <h1>Lennie CMS Workspace</h1>
+            <p>Preview cho admin non-tech</p>
+          </div>
+        </div>
+
+        <div class="nav-group-label">Điều hướng chính</div>
+        <nav class="nav" id="nav"></nav>
+
+        <div class="sidebar-note">
+          <strong>Nguyên tắc UX</strong>
+          <p>
+            Sidebar chỉ hiển thị các hub lớn theo nghiệp vụ. Bên trong mỗi hub là launcher đưa editor
+            vào đúng nơi chỉnh sửa.
+          </p>
+        </div>
+      </aside>
+
+      <main class="workspace">
+        <div class="topbar">
+          <div class="search">Tìm nhanh: Trang chủ, CTA, Dịch vụ, Đơn hàng, Founder...</div>
+          <div class="pill">Vai trò preview: Admin vận hành</div>
+          <div class="pill">Stack: Strapi v5 self-hosted</div>
+        </div>
+
+        <section class="hero">
+          <div class="hero-label" id="heroLabel">Hub workspace</div>
+          <h2 id="heroTitle">Tổng quan và điều hướng cho editor</h2>
+          <p id="heroDescription"></p>
+          <div class="hero-meta" id="heroMeta"></div>
+        </section>
+
+        <section class="stats" id="stats"></section>
+
+        <section class="dashboard" id="dashboard"></section>
+
+        <div class="sections" id="sections"></div>
+
+        <section class="preview-bar">
+          <div class="preview-tile tone-soft">
+            <strong>Logic preview</strong>
+            <p>Mỗi menu top-level là một custom plugin page. Mỗi card là một launcher đi đến edit, list hoặc create view.</p>
+          </div>
+          <div class="preview-tile tone-success">
+            <strong>Phù hợp non-tech</strong>
+            <p>Tên menu theo ngôn ngữ vận hành, không theo tên technical model. Taxonomy được lùi xuống các khu vực nâng cao.</p>
+          </div>
+          <div class="preview-tile tone-warning">
+            <strong>Phù hợp Strapi</strong>
+            <p>Không cần rewrite toàn bộ CRUD. UX mới hướng editor vào đúng screen Strapi sẵn có và giảm việc mở Content Manager thủ công.</p>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script>
+      const hubs = [
+        {
+          id: "overview",
+          icon: "🏠",
+          label: "Tổng quan",
+          navHint: "Shortcut và nhiệm vụ hôm nay",
+          heroLabel: "Dashboard điều hành",
+          title: "Tổng quan và lối đi nhanh cho admin non-tech",
+          description:
+            "Đây là điểm vào đầu tiên để admin biết ngay mình cần vào đâu. Mục tiêu là giảm việc nhớ technical model và thay bằng ngôn ngữ công việc hằng ngày.",
+          meta: ["Chỉnh sửa nhanh", "Hôm nay", "Kho nội dung", "Launcher mode"],
+          stats: [
+            ["12", "Đơn và lịch cần xử lý"],
+            ["78,4 triệu", "Doanh thu tháng này"],
+            ["6", "Bài viết mới trong tháng"],
+            ["9", "Hub điều hướng chính"],
+          ],
+          dashboard: {
+            operations: {
+              title: "Việc cần xử lý ngay",
+              description: "Danh sách ngắn các đầu việc nóng để admin không bỏ sót order và booking mới.",
+              items: [
+                ["Đơn #LSL-240629-018", "Khách: Trâm Anh · 3 sản phẩm · COD", "Chờ xác nhận"],
+                ["Đơn #LSL-240629-014", "Khách: Bảo Ngọc · Đã chuyển khoản", "Đóng gói hôm nay"],
+                ["Booking 10:30 - Cơ sở Quận 3", "Dịch vụ: Routine cá nhân hóa · Khách: Hồng Vân", "Cần gọi xác nhận"],
+                ["Booking 14:00 - Online", "Dịch vụ: Tư vấn da từ xa · Khách: Minh Thư", "Chờ gửi form trước hẹn"],
+              ],
+            },
+            revenue: {
+              title: "Doanh thu & vận hành tháng này",
+              description: "Khối tổng hợp để quản lý nhìn nhanh nhịp bán hàng và lượng yêu cầu mới.",
+              metrics: [
+                ["Doanh thu shop", "78,4 triệu", "Tăng 12% so với tháng trước"],
+                ["Đơn hàng hoàn tất", "42 đơn", "9 đơn đang chờ xử lý"],
+                ["Lead tư vấn mới", "31 lead", "Tỷ lệ phản hồi trong 24h: 84%"],
+                ["Lịch hẹn đã chốt", "19 booking", "5 booking cần gọi lại"],
+              ],
+            },
+            editorial: {
+              title: "Nội dung tháng này",
+              description: "Theo dõi nhịp xuất bản và hiệu suất kho nội dung để giữ website luôn mới.",
+              metrics: [
+                ["Bài viết mới", "6", "2 bài đã lên lịch tuần này"],
+                ["Bài viết nổi bật", "3", "1 bài cần bổ sung ảnh cover"],
+                ["FAQ mới", "9", "4 câu hỏi liên quan dịch vụ trị nám"],
+                ["Testimonials mới", "5", "2 case cần duyệt ảnh trước/sau"],
+              ],
+              note: "Có thể mở rộng thêm top bài viết theo lượt xem khi frontend hoặc analytics đã kết nối đủ dữ liệu.",
+            },
+          },
+          sections: [
+            {
+              title: "Chỉnh sửa nhanh",
+              description: "Các điểm chạm hay sửa nhất và cần đưa ra ngoài cùng.",
+              hint: "Ưu tiên cho training",
+              cards: [
+                ["✨", "Trang chủ", "Single type", "Hero, stats, services slider, mantra.", "Chỉnh sửa", "Mở nhanh"],
+                ["☎", "CTA & Hotline", "Single type", "Hotline, Messenger, Zalo, CTA chính và phụ.", "Chỉnh sửa", "Xem liên kết"],
+                ["✉", "Liên hệ", "Single type", "Địa chỉ, giờ mở cửa, email, social links.", "Chỉnh sửa", "Xem maps"],
+                ["👑", "Founder", "Single type", "Chân dung, summary, trust points, founder CTA.", "Chỉnh sửa", "Preview trust"],
+              ],
+            },
+            {
+              title: "Xử lý hôm nay",
+              description: "Nhóm công việc vận hành cần thấy ngay khi đăng nhập.",
+              hint: "Có thể thêm badge sau",
+              cards: [
+                ["🔔", "Leads tư vấn", "List view", "Danh sách khách cần gọi lại hoặc follow-up.", "Mở danh sách", "Lọc mới"],
+                ["📅", "Lịch hẹn", "List view", "Booking tại cơ sở và tình trạng xử lý.", "Mở lịch hẹn", "Lọc chờ xử lý"],
+                ["🧾", "Đơn hàng", "List view", "Theo dõi order mới, thanh toán và giao nhận.", "Mở đơn hàng", "Lọc mới"],
+                ["💌", "Newsletter", "List view", "Người đăng ký nhận thông tin từ footer.", "Mở danh sách", "Xuất email"],
+              ],
+            },
+          ],
+        },
+        {
+          id: "site",
+          icon: "🧭",
+          label: "Trang chủ & Site",
+          navHint: "Thông tin tác động toàn website",
+          heroLabel: "Nội dung site-wide",
+          title: "Tất cả cấu hình tác động đến trang chủ và nhiều trang cùng lúc",
+          description:
+            "Hub này gom các singleton và dữ liệu site-wide để admin không phải vào Content Manager tìm từng model. Đây là khu vực quan trọng nhất sau Tổng quan.",
+          meta: ["Homepage", "CTA", "Liên hệ", "Chi nhánh"],
+          stats: [
+            ["4", "Core launchers"],
+            ["1", "Trang chủ singleton"],
+            ["2", "Site-wide singleton"],
+            ["1", "Branch directory"],
+          ],
+          sections: [
+            {
+              title: "Chỉnh sửa chính",
+              description: "Những module ảnh hưởng trực tiếp landing page và thông tin toàn site.",
+              hint: "Hub ưu tiên số 1",
+              cards: [
+                ["🏡", "Trang chủ", "Single type", "Hero, stats, mantra cards và services slider.", "Chỉnh sửa", "Xem bố cục"],
+                ["📣", "CTA & Hotline", "Single type", "Hotline, Zalo, WhatsApp, primary/secondary CTA.", "Chỉnh sửa", "Kiểm tra link"],
+                ["📍", "Liên hệ", "Single type", "Địa chỉ, email, Facebook, Instagram, TikTok, maps.", "Chỉnh sửa", "Xem social"],
+                ["🏢", "Cơ sở / chi nhánh", "Collection", "Địa chỉ, note, tag, phone và giờ hoạt động từng cơ sở.", "Mở danh sách", "Thêm chi nhánh"],
+              ],
+            },
+            {
+              title: "Thiết lập nâng cao",
+              description: "Chi tiết bổ sung cho trang chủ và thông tin liên hệ.",
+              hint: "Optional widgets",
+              cards: [
+                ["⏰", "Giờ mở cửa", "Embedded config", "Có thể hiển thị như một launcher nhỏ trỏ vào contact-info.", "Mở block", "Xem theo ngày"],
+                ["🖼", "Hero Slides", "Component group", "Preview tạm thời cho các card hero slide trong homepage.", "Mở trang chủ", "Xem cấu trúc"],
+              ],
+            },
+          ],
+        },
+        {
+          id: "brand",
+          icon: "👑",
+          label: "Giới thiệu & Thương hiệu",
+          navHint: "Founder, đội ngũ, brand đối tác",
+          heroLabel: "Khối xây dựng niềm tin",
+          title: "Nội dung giúp tăng uy tín và bộ mặt thương hiệu",
+          description:
+            "Hub này gom các thành phần về founder, đội ngũ và brand đối tác. Editor sẽ hiểu đây là khu vực xây dựng niềm tin thay vì một danh sách model rời rạc.",
+          meta: ["Founder", "Đội ngũ", "Brand đối tác"],
+          stats: [
+            ["1", "Hồ sơ founder"],
+            ["2", "Danh sách trust"],
+            ["3", "Module tăng uy tín"],
+            ["1", "Cụm training"],
+          ],
+          sections: [
+            {
+              title: "Nội dung chính",
+              description: "Các khu vực nói về con người và năng lực thương hiệu.",
+              hint: "Trust proof",
+              cards: [
+                ["👩", "Founder", "Single type", "Tên, portrait, summary, credentials, trust points, CTA.", "Chỉnh sửa", "Preview giới thiệu"],
+                ["🧑‍🤝‍🧑", "Đội ngũ", "Collection", "Tên, role, photo và thứ tự hiển thị.", "Mở danh sách", "Thêm thành viên"],
+                ["🧴", "Brand đối tác", "Collection", "Logo, tên và thứ tự hiển thị trên website.", "Mở danh sách", "Thêm brand"],
+              ],
+            },
+          ],
+        },
+        {
+          id: "services",
+          icon: "🩺",
+          label: "Dịch vụ",
+          navHint: "Service, concern, category, FAQ",
+          heroLabel: "Trung tâm nội dung dịch vụ",
+          title: "Trung tâm nội dung cho các dịch vụ và vấn đề da",
+          description:
+            "Hub dịch vụ cần là một workspace riêng vì đây là khu vực có nhiều trường nội dung và relation nhất. Taxonomy được đẩy xuống phần nâng cao để non-tech editor không bị ngợp.",
+          meta: ["Danh sách dịch vụ", "FAQ dịch vụ", "Nhóm", "Vấn đề da"],
+          stats: [
+            ["1", "Collection dịch vụ chính"],
+            ["2", "Taxonomy hỗ trợ"],
+            ["1", "Khu FAQ"],
+            ["26+", "Field trong model dịch vụ"],
+          ],
+          sections: [
+            {
+              title: "Nội dung chính",
+              description: "Những nơi editor sẽ vào thường xuyên để tạo và cập nhật dịch vụ.",
+              hint: "Phức tạp nhất",
+              cards: [
+                ["💆", "Danh sách dịch vụ", "Collection", "Title, slug, hero image, intro, price, steps, CTAs, related content.", "Mở danh sách", "Tạo dịch vụ mới"],
+                ["❓", "FAQ dịch vụ", "Collection", "Question, answer, related services và featured FAQ.", "Mở FAQ", "Thêm câu hỏi"],
+              ],
+            },
+            {
+              title: "Thiết lập nâng cao",
+              description: "Taxonomy phục vụ relation cho service và skin result.",
+              hint: "Advanced only",
+              cards: [
+                ["🗂", "Nhóm dịch vụ", "Collection", "Danh mục để phân nhóm service và điều hướng archive.", "Mở nhóm", "Thêm nhóm"],
+                ["🧬", "Vấn đề da", "Collection", "Concern được dùng lại cho service và kết quả điều trị.", "Mở concern", "Thêm concern"],
+              ],
+            },
+          ],
+        },
+        {
+          id: "shop",
+          icon: "🛒",
+          label: "Sản phẩm & Shop",
+          navHint: "Catalog và tag sản phẩm",
+          heroLabel: "Trung tâm shop",
+          title: "Khu vực quản lý catalog sản phẩm và liên kết shop",
+          description:
+            "Hub này giúp editor tập trung vào sản phẩm và tag thay vì bị phân tâm bởi order hoặc content khác. Nó rất hợp cho luồng việc catalog-first của Lennie.",
+          meta: ["Danh sách sản phẩm", "Tags", "Catalog focus"],
+          stats: [
+            ["1", "Collection sản phẩm"],
+            ["1", "Tag helper"],
+            ["10+", "Field hướng catalog"],
+            ["2", "Card launcher chính"],
+          ],
+          sections: [
+            {
+              title: "Nội dung chính",
+              description: "Danh sách sản phẩm và thao tác tạo/cập nhật catalog.",
+              hint: "Catalog workspace",
+              cards: [
+                ["🧴", "Danh sách sản phẩm", "Collection", "Name, image, description, badge, status, prices, tags, testimonials.", "Mở danh sách", "Tạo sản phẩm mới"],
+              ],
+            },
+            {
+              title: "Thiết lập nâng cao",
+              description: "Danh mục và filter giúp editor làm sạch catalog.",
+              hint: "Taxonomy",
+              cards: [
+                ["#", "Tag sản phẩm", "Collection", "Tag dùng để gom nhóm sản phẩm và bộ lọc shop.", "Mở tags", "Thêm tag"],
+              ],
+            },
+          ],
+        },
+        {
+          id: "proof",
+          icon: "💙",
+          label: "Đánh giá & Kết quả",
+          navHint: "Testimonials và before-after",
+          heroLabel: "Trung tâm social proof",
+          title: "Nội dung tăng tin tưởng bằng đánh giá và kết quả thực tế",
+          description:
+            "Testimonials và skin results nên nằm chung vì editor cảm nhận đây đều là bằng chứng kết quả. Topic và result type vẫn được đưa ra ngoài nhưng đặt trong lớp nâng cao.",
+          meta: ["Testimonials", "Skin results", "Topics", "Result types"],
+          stats: [
+            ["2", "Collection chính"],
+            ["2", "Phân loại nâng cao"],
+            ["1", "Hub tăng niềm tin"],
+            ["16+", "Field trong testimonial"],
+          ],
+          sections: [
+            {
+              title: "Nội dung chính",
+              description: "Nội dung editor sẽ cập nhật để tăng social proof.",
+              hint: "Trust proof",
+              cards: [
+                ["⭐", "Khách hàng đánh giá", "Collection", "Quote, stars, case type, source, related services và products.", "Mở danh sách", "Thêm đánh giá"],
+                ["📸", "Kết quả trước / sau", "Collection", "Before/after image, case summary, timeframe, treatment steps.", "Mở danh sách", "Thêm kết quả"],
+              ],
+            },
+            {
+              title: "Thiết lập nâng cao",
+              description: "Taxonomy giúp gom nhóm và điều hướng các proof blocks.",
+              hint: "Advanced only",
+              cards: [
+                ["🏷", "Chủ đề đánh giá", "Collection", "Topic cho testimonial để bộ lọc và context hóa.", "Mở chủ đề", "Thêm chủ đề"],
+                ["🧪", "Loại kết quả", "Collection", "Phân loại các case result trong before-after.", "Mở loại", "Thêm loại"],
+              ],
+            },
+          ],
+        },
+        {
+          id: "blog",
+          icon: "📚",
+          label: "Blog & FAQ",
+          navHint: "Bài viết và kiến thức hỗ trợ",
+          heroLabel: "Trung tâm nội dung kiến thức",
+          title: "Nội dung kiến thức, bài viết và kho câu hỏi hỗ trợ",
+          description:
+            "Blog và FAQ nên có một hub riêng để editor nghĩ theo dòng nội dung giáo dục. FAQ vẫn có thể được truy cập từ hub Dịch vụ, nhưng ở đây sẽ được hiểu là kho kiến thức tổng hợp.",
+          meta: ["Blog posts", "FAQ tổng hợp", "FAQ categories"],
+          stats: [
+            ["1", "Blog collection"],
+            ["1", "FAQ collection"],
+            ["1", "FAQ taxonomy"],
+            ["2", "Launcher chính"],
+          ],
+          sections: [
+            {
+              title: "Nội dung chính",
+              description: "Bài viết và câu hỏi trả lời cho khách hàng.",
+              hint: "SEO + education",
+              cards: [
+                ["📝", "Bài viết blog", "Collection", "Title, slug, excerpt, cover image, body, category và featured.", "Mở danh sách", "Tạo bài viết mới"],
+                ["💬", "FAQ tổng hợp", "Collection", "Kho FAQ đã dùng cho nhiều page và contexts.", "Mở FAQ", "Thêm câu hỏi"],
+              ],
+            },
+            {
+              title: "Thiết lập nâng cao",
+              description: "Taxonomy cho FAQ nếu cần điều hướng rõ hơn.",
+              hint: "Phase 2 filters",
+              cards: [
+                ["🗃", "Nhóm FAQ", "Collection", "Nhóm theo page hoặc chủ đề để dễ lọc trong list view.", "Mở nhóm", "Thêm nhóm"],
+              ],
+            },
+          ],
+        },
+        {
+          id: "ops",
+          icon: "🔔",
+          label: "Khách hàng & Đơn",
+          navHint: "Lead, booking, order, newsletter",
+          heroLabel: "Trung tâm vận hành",
+          title: "Khu vực vận hành hằng ngày cho lead, lịch hẹn và đơn hàng",
+          description:
+            "Đây là hub quan trọng nhất cho công việc xử lý sau khi website đi vào hoạt động. Nó giúp nhìn thao tác theo nhiệm vụ thay vì theo tên database.",
+          meta: ["Leads", "Bookings", "Orders", "Newsletter"],
+          stats: [
+            ["4", "Danh sách vận hành chính"],
+            ["3", "Flow theo trạng thái"],
+            ["1", "Kho newsletter"],
+            ["1", "Hub ưu tiên cao"],
+          ],
+          sections: [
+            {
+              title: "Công việc chính",
+              description: "Những danh sách cần được check mỗi ngày.",
+              hint: "Cần thêm badge sau",
+              cards: [
+                ["📞", "Leads tư vấn", "Collection", "Tên, phone, skin condition, service interest, source, status.", "Mở danh sách", "Lọc mới"],
+                ["🗓", "Lịch hẹn", "Collection", "Khách đặt lịch, chi nhánh, service, ngày giờ và tình trạng.", "Mở lịch hẹn", "Lọc chờ xử lý"],
+                ["🧾", "Đơn hàng", "Collection", "Mã đơn, thông tin khách, địa chỉ, item count, subtotal, status.", "Mở đơn hàng", "Lọc mới"],
+                ["💌", "Đăng ký newsletter", "Collection", "Danh sách email từ footer và các điểm đăng ký.", "Mở danh sách", "Xem email"],
+              ],
+            },
+          ],
+        },
+        {
+          id: "system",
+          icon: "⚙",
+          label: "Hệ thống",
+          navHint: "Notify, media và quyền truy cập",
+          heroLabel: "Thiết lập hệ thống",
+          title: "Cấu hình nội bộ và các công cụ quản trị cấp cuối",
+          description:
+            "Hub này được đặt cuối để tránh làm non-tech editor rối. Chỉ những gì liên quan đến notify, media và system-level actions mới nên nằm ở đây.",
+          meta: ["Notification setting", "Media", "Permissions"],
+          stats: [
+            ["1", "Singleton notify nội bộ"],
+            ["2", "System shortcuts"],
+            ["1", "Khu admin-only"],
+            ["0", "Ưu tiên biên tập"],
+          ],
+          sections: [
+            {
+              title: "Công cụ hệ thống",
+              description: "Những khu vực không cần mở hằng ngày, nhưng cần rõ ràng khi cần.",
+              hint: "Admin role only",
+              cards: [
+                ["📡", "Thông báo nội bộ", "Single type", "Bật/tắt Zalo OA và Messenger, quản lý token notify.", "Chỉnh sửa", "Kiểm tra token"],
+                ["🖼", "Media Library", "Native plugin", "Truy cập kho media để upload và chọn ảnh.", "Mở media", "Upload mới"],
+                ["🔐", "Users & Permissions", "Native plugin", "Quản lý role, user và quyền truy cập admin/API.", "Mở quyền", "Xem roles"],
+              ],
+            },
+          ],
+        },
+      ];
+
+      const navEl = document.getElementById("nav");
+      const heroLabelEl = document.getElementById("heroLabel");
+      const heroTitleEl = document.getElementById("heroTitle");
+      const heroDescriptionEl = document.getElementById("heroDescription");
+      const heroMetaEl = document.getElementById("heroMeta");
+      const statsEl = document.getElementById("stats");
+      const dashboardEl = document.getElementById("dashboard");
+      const sectionsEl = document.getElementById("sections");
+
+      function renderDashboard(dashboard) {
+        if (!dashboard) {
+          dashboardEl.innerHTML = "";
+          dashboardEl.style.display = "none";
+          return;
+        }
+
+        dashboardEl.style.display = "grid";
+        dashboardEl.innerHTML = `
+          <article class="dashboard-card">
+            <h3>${dashboard.operations.title}</h3>
+            <p>${dashboard.operations.description}</p>
+            <div class="queue-list">
+              ${dashboard.operations.items
+                .map(
+                  ([title, meta, status], index) => `
+                    <div class="queue-item">
+                      <div class="queue-head">
+                        <strong>${title}</strong>
+                        <span class="status ${index % 2 === 0 ? "status-warn" : "status-info"}">${status}</span>
+                      </div>
+                      <div class="queue-meta">${meta}</div>
+                    </div>
+                  `
+                )
+                .join("")}
+            </div>
+            <div class="dashboard-note">Gợi ý dev: panel này có thể map từ query tổng hợp order, booking, contact-lead với preset lọc trạng thái cần xử lý.</div>
+          </article>
+          <article class="dashboard-card">
+            <h3>${dashboard.revenue.title}</h3>
+            <p>${dashboard.revenue.description}</p>
+            <div class="metric-stack">
+              ${dashboard.revenue.metrics
+                .map(
+                  ([label, value, note]) => `
+                    <div class="metric-row">
+                      <div>
+                        <strong>${label}</strong>
+                        <span>${note}</span>
+                      </div>
+                      <div class="metric-value">${value}</div>
+                    </div>
+                  `
+                )
+                .join("")}
+            </div>
+          </article>
+          <article class="dashboard-card">
+            <h3>${dashboard.editorial.title}</h3>
+            <p>${dashboard.editorial.description}</p>
+            <div class="metric-stack">
+              ${dashboard.editorial.metrics
+                .map(
+                  ([label, value, note], index) => `
+                    <div class="metric-row">
+                      <div>
+                        <strong>${label}</strong>
+                        <span>${note}</span>
+                      </div>
+                      <div class="metric-value">${value}</div>
+                    </div>
+                  `
+                )
+                .join("")}
+            </div>
+            <div class="dashboard-note">${dashboard.editorial.note}</div>
+          </article>
+        `;
+      }
+
+      function renderNav(activeId) {
+        navEl.innerHTML = hubs
+          .map(
+            (hub) => `
+              <button class="${hub.id === activeId ? "active" : ""}" data-id="${hub.id}">
+                <span class="nav-icon">${hub.icon}</span>
+                <span class="nav-copy">
+                  <strong>${hub.label}</strong>
+                  <span>${hub.navHint}</span>
+                </span>
+              </button>
+            `
+          )
+          .join("");
+
+        [...navEl.querySelectorAll("button")].forEach((btn) => {
+          btn.addEventListener("click", () => renderHub(btn.dataset.id));
+        });
+      }
+
+      function renderHub(id) {
+        const hub = hubs.find((item) => item.id === id) || hubs[0];
+
+        renderNav(hub.id);
+
+        heroLabelEl.textContent = hub.heroLabel;
+        heroTitleEl.textContent = hub.title;
+        heroDescriptionEl.textContent = hub.description;
+
+        heroMetaEl.innerHTML = hub.meta.map((item) => `<span>${item}</span>`).join("");
+        renderDashboard(hub.dashboard);
+
+        statsEl.innerHTML = hub.stats
+          .map(
+            ([value, label]) => `
+              <div class="stat">
+                <strong>${value}</strong>
+                <span>${label}</span>
+              </div>
+            `
+          )
+          .join("");
+
+        sectionsEl.innerHTML = hub.sections
+          .map(
+            (section) => `
+              <section class="section">
+                <div class="section-header">
+                  <div>
+                    <h3>${section.title}</h3>
+                    <p>${section.description}</p>
+                  </div>
+                  <div class="hint">${section.hint}</div>
+                </div>
+                <div class="cards">
+                  ${section.cards
+                    .map(
+                      ([icon, title, tag, copy, primary, secondary]) => `
+                        <article class="card">
+                          <div class="card-top">
+                            <div class="card-icon">${icon}</div>
+                            <div class="card-tag">${tag}</div>
+                          </div>
+                          <h4>${title}</h4>
+                          <p>${copy}</p>
+                          <div class="card-actions">
+                            <span class="btn btn-primary">${primary}</span>
+                            <span class="btn btn-secondary">${secondary}</span>
+                          </div>
+                        </article>
+                      `
+                    )
+                    .join("")}
+                </div>
+              </section>
+            `
+          )
+          .join("");
+      }
+
+      renderHub("overview");
+    </script>
+  </body>
+</html>
