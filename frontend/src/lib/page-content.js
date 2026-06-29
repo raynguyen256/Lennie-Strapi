@@ -14,7 +14,10 @@ import {
   getContactInfo,
   getGeneralSetting,
   getBranches,
+  getSkinResults,
+  getTestimonialsByProductSlug,
 } from "@/lib/strapi";
+import { FACEBOOK_URL, INSTAGRAM_URL, TIKTOK_URL, MESSENGER_URL } from "@/lib/social-links";
 import {
   productData as fallbackProducts,
   teamData as fallbackTeamData,
@@ -43,7 +46,7 @@ const FALLBACK_GENERAL = {
   hotline: "+84 909 123 456",
   primaryCta: { label: "Đặt lịch trị liệu ngay", url: "/booking" },
   secondaryCta: { label: "Phân tích da miễn phí", url: "/booking?quiz=1" },
-  messengerUrl: "https://m.me/lennie.skinlab",
+  messengerUrl: MESSENGER_URL,
   zaloUrl: "https://zalo.me/84909123456",
   whatsappUrl: "",
 };
@@ -53,9 +56,9 @@ const FALLBACK_CONTACT = {
   mapsUrl: "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent("142 Võ Văn Tần, Quận 3, TP.HCM"),
   openingHours: [{ daysLabel: "Thứ 2 - Thứ 7", hours: "8:00 - 20:00" }],
   email: "hello@lennieskinlab.vn",
-  facebookUrl: "",
-  instagramUrl: "",
-  tiktokUrl: "",
+  facebookUrl: FACEBOOK_URL,
+  instagramUrl: INSTAGRAM_URL,
+  tiktokUrl: TIKTOK_URL,
 };
 
 /** Bộ field "Tư vấn & Phác đồ" dùng làm fallback cuối cùng khi category không khớp danh sách mặc định */
@@ -219,14 +222,26 @@ export async function getShopArchive() {
 }
 
 /** /shop/[slug]: chi tiết sản phẩm + sản phẩm liên quan */
+function mapProductReview(r) {
+  return {
+    name: r.name,
+    caseType: r.topic?.name || r.caseType,
+    stars: r.stars,
+    text: r.quote,
+    img: getStrapiMedia(r.photo) || fallbackReviewsData[0].img,
+  };
+}
+
 export async function getProductDetail(slug) {
-  const [product, allProducts] = await Promise.all([getProductBySlug(slug), getProducts()]);
+  const [product, allProducts, productReviews] = await Promise.all([getProductBySlug(slug), getProducts(), getTestimonialsByProductSlug(slug)]);
+  const reviews = (productReviews || []).map(mapProductReview);
   if (product) {
     const mapped = mapProduct(product, 0);
     const related = (allProducts || []).filter((p) => p.slug !== slug).slice(0, 4).map(mapProduct);
     return {
       ...mapped,
       related: related.length ? related : fallbackProductsCatalog.filter((p) => p.slug !== slug).slice(0, 4).map(mapFallbackProduct),
+      productReviews: reviews,
     };
   }
   const fallback = fallbackProductsCatalog.find((p) => p.slug === slug);
@@ -236,6 +251,7 @@ export async function getProductDetail(slug) {
     description: fallback.description ? toBlocks([fallback.description]) : null,
     excerpt: fallback.description || "",
     related: fallbackProductsCatalog.filter((p) => p.slug !== slug).slice(0, 4).map(mapFallbackProduct),
+    productReviews: reviews,
   };
 }
 
@@ -281,6 +297,34 @@ export async function getBlogDetail(slug) {
   const fallback = fallbackBlogPosts.find((p) => p.slug === slug);
   if (!fallback) return null;
   return { ...fallback, related: computeRelatedPosts(fallbackBlogPosts, fallback) };
+}
+
+/** /case-study: danh sách case study thật (before/after) từ skin-result */
+function mapSkinResult(r) {
+  return {
+    id: r.documentId,
+    title: r.title,
+    beforeImg: getStrapiMedia(r.beforeImage),
+    afterImg: getStrapiMedia(r.afterImage),
+    timeframe: r.timeframe || "",
+    caseSummary: r.caseSummary || "",
+    treatmentSteps: Array.isArray(r.treatmentSteps) && r.treatmentSteps.length ? r.treatmentSteps : null,
+    disclaimer: r.disclaimer || "",
+    featured: !!r.featured,
+    skinConcerns: (r.skinConcerns || []).map((c) => c.name),
+    resultType: r.resultType?.name || "",
+  };
+}
+
+export async function getCaseStudyContent() {
+  const results = await getSkinResults();
+  return {
+    title: "Lennie SkinLab | Câu Chuyện Khách Hàng",
+    intro:
+      "Lưu giữ lại hành trình của những làn da từng điều trị tại Lennie. Đây chính là kết quả từ một phác đồ phù hợp và sự kiên trì của chính các bạn. Tụi mình lưu lại những câu chuyện thực tế tại đây, không phải để hứa hẹn một hành trình hoàn hảo, mà để bạn thấy rằng: chỉ cần đi đúng hướng, làn da nào cũng sẽ có cơ hội được khỏe mạnh trở lại.",
+    cta: "Hành trình vạn dặm bắt đầu từ một bước chân. Nên nếu bạn vẫn đang chần chừ chưa biết phải bước đi thế nào trên con đường chăm da, đừng ngại nhắn Lennie để tụi mình tư vấn nhé!",
+    items: (results || []).map(mapSkinResult),
+  };
 }
 
 /** Danh sách cơ sở/chi nhánh cho /booking và /contact */
@@ -346,9 +390,9 @@ export async function getContactContent() {
     mapsUrl: contactInfo?.mapsUrl || FALLBACK_CONTACT.mapsUrl,
     email: contactInfo?.email || FALLBACK_CONTACT.email,
     openingHours: contactInfo?.openingHours?.length ? contactInfo.openingHours : FALLBACK_CONTACT.openingHours,
-    facebookUrl: contactInfo?.facebookUrl || "",
-    instagramUrl: contactInfo?.instagramUrl || "",
-    tiktokUrl: contactInfo?.tiktokUrl || "",
+    facebookUrl: contactInfo?.facebookUrl || FALLBACK_CONTACT.facebookUrl,
+    instagramUrl: contactInfo?.instagramUrl || FALLBACK_CONTACT.instagramUrl,
+    tiktokUrl: contactInfo?.tiktokUrl || FALLBACK_CONTACT.tiktokUrl,
     hotline: generalSetting?.hotline || FALLBACK_GENERAL.hotline,
     messengerUrl: generalSetting?.messengerUrl || FALLBACK_GENERAL.messengerUrl,
     zaloUrl: generalSetting?.zaloUrl || FALLBACK_GENERAL.zaloUrl,

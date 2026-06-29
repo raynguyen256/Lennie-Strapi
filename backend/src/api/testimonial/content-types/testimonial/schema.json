@@ -68,6 +68,12 @@
       "relation": "manyToOne",
       "target": "api::testimonial-topic.testimonial-topic",
       "inversedBy": "testimonials"
+    },
+    "relatedProducts": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::product.product",
+      "inversedBy": "testimonials"
     }
   }
 }

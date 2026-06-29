@@ -9,11 +9,13 @@ services:
       HOST: 0.0.0.0
       PORT: 1337
       CORS_ORIGINS: http://localhost:3000,http://frontend:3000
+      SEED_ASSETS_DIR: /app/seed-assets
     ports:
       - "1337:1337"
     volumes:
       - strapi_data:/app/.tmp
       - strapi_uploads:/app/public/uploads
+      - ./frontend/public/assets:/app/seed-assets:ro
     healthcheck:
       test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:1337/admin').then((res) => process.exit(res.ok ? 0 : 1)).catch(() => process.exit(1))"]
       interval: 15s

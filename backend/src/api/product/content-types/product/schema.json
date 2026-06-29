@@ -66,6 +66,12 @@
     },
     "oldPrice": {
       "type": "string"
+    },
+    "testimonials": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::testimonial.testimonial",
+      "mappedBy": "relatedProducts"
     }
   }
 }

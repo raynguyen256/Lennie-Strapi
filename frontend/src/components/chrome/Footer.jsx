@@ -3,8 +3,15 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Icon } from "@/lib/icons";
+import { FACEBOOK_URL, INSTAGRAM_URL, TIKTOK_URL } from "@/lib/social-links";
 
-export default function Footer() {
+export default function Footer({ facebookUrl, instagramUrl, tiktokUrl, zaloUrl }) {
+  const socials = [
+    { label: "Facebook", icon: "Facebook", url: facebookUrl || FACEBOOK_URL },
+    { label: "Instagram", icon: "Instagram", url: instagramUrl || INSTAGRAM_URL },
+    { label: "TikTok", icon: "TikTok", url: tiktokUrl || TIKTOK_URL },
+    { label: "Zalo", icon: null, url: zaloUrl || "" },
+  ].filter((s) => s.url);
   const [email, setEmail] = useState("");
   const [sub, setSub] = useState(false);
   const [subMsg, setSubMsg] = useState("Đăng ký thành công!");
@@ -43,14 +50,22 @@ export default function Footer() {
               Lennie SkinLab tin vào sức mạnh chữa lành của y học lâm sàng và dược mỹ phẩm chọn lọc độc quyền. Chúng tôi đồng hành trao gửi làn da khỏe mạnh nguyên bản nhất cho bạn.
             </p>
             <div className="flex gap-2.5">
-              {["Fb", "Ig", "Zl", "Tk"].map((s) => (
-                <div
-                  key={s}
-                  className="w-9 h-9 rounded-full bg-white hover:bg-brand-blue hover:text-white border border-divider flex items-center justify-center text-xs font-bold uppercase transition-colors cursor-pointer text-brand-blue select-none"
-                >
-                  {s}
-                </div>
-              ))}
+              {socials.map((s) => {
+                const SocialIcon = s.icon ? Icon[s.icon] : null;
+                return (
+                  <a
+                    key={s.label}
+                    href={s.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title={s.label}
+                    aria-label={s.label}
+                    className="w-9 h-9 rounded-full bg-white hover:bg-brand-blue hover:text-white border border-divider flex items-center justify-center text-xs font-bold uppercase transition-colors text-brand-blue select-none"
+                  >
+                    {SocialIcon ? <SocialIcon size={16} stroke={1.8} /> : s.label.slice(0, 2)}
+                  </a>
+                );
+              })}
             </div>
           </div>
           <div className="lg:col-span-2 space-y-5">
@@ -62,7 +77,9 @@ export default function Footer() {
                 ["Sản phẩm", "/shop"],
                 ["Đánh giá khách hàng", "/testimonials"],
                 ["Blog da liễu", "/blog"],
+                ["Case Study", "/case-study"],
                 ["Đặt lịch", "/booking"],
+                ["Liên hệ", "/contact"],
               ].map(([t, h]) => (
                 <Link key={h} href={h} className="hover:text-brand-blue transition-colors text-ink-2">
                   {t}

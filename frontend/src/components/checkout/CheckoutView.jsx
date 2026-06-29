@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import Navbar from "@/components/chrome/Navbar";
 import Footer from "@/components/chrome/Footer";
@@ -20,6 +20,28 @@ const PAYMENT_METHODS = [
 ];
 
 const inputCls = "w-full px-4 py-3 bg-white border border-divider focus:border-brand-blue focus:ring-1 focus:ring-brand-blue outline-none rounded-sm font-sans text-sm text-ink placeholder-ink-3/60";
+
+const SHIPPING_STORAGE_KEY = "lennie_shipping_info";
+
+function loadSavedShippingInfo() {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = window.localStorage.getItem(SHIPPING_STORAGE_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
+
+function saveShippingInfo(form) {
+  if (typeof window === "undefined") return;
+  try {
+    const { name, phone, email, province, district, ward, street } = form;
+    window.localStorage.setItem(SHIPPING_STORAGE_KEY, JSON.stringify({ name, phone, email, province, district, ward, street }));
+  } catch {
+    // bỏ qua nếu localStorage không khả dụng (vd Safari private mode)
+  }
+}
 
 function Field({ label, required, children, half }) {
   return (
@@ -171,6 +193,19 @@ function CheckoutContent() {
   const [order, setOrder] = useState(null);
   const [placing, setPlacing] = useState(false);
   const [orderError, setOrderError] = useState(null);
+  const [savedInfo, setSavedInfo] = useState(null);
+  const [prefilled, setPrefilled] = useState(false);
+
+  useEffect(() => {
+    const saved = loadSavedShippingInfo();
+    if (saved) setSavedInfo(saved);
+  }, []);
+
+  const usePreviousInfo = () => {
+    if (!savedInfo) return;
+    setForm((f) => ({ ...f, ...savedInfo }));
+    setPrefilled(true);
+  };
 
   const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
   const required = ["name", "phone", "province", "district", "ward", "street"];
@@ -213,6 +248,7 @@ function CheckoutContent() {
       if (!res.ok) throw new Error(data.error || "Đặt hàng thất bại");
 
       setOrder({ code: data.code, name: form.name, phone: form.phone, count: selectedCount, subtotal: selectedSubtotal, paymentLabel: pm.label, address });
+      saveShippingInfo(form);
       removeMany(selectedItems.map((i) => i.id));
     } catch (err) {
       setOrderError(err.message || "Đặt hàng thất bại, vui lòng thử lại.");
@@ -277,6 +313,20 @@ function CheckoutContent() {
                   </span>
                   <h2 className="font-serif text-2xl text-ink font-semibold">Địa chỉ giao hàng</h2>
                 </div>
+                {savedInfo && !prefilled && (
+                  <div className="flex items-center justify-between gap-4 bg-brand-blue-light border border-divider rounded-md p-4">
+                    <p className="font-sans text-[13px] text-ink-2">
+                      Tìm thấy thông tin giao hàng từ lần đặt hàng trước (<strong className="text-ink">{savedInfo.name}</strong>).
+                    </p>
+                    <button
+                      type="button"
+                      onClick={usePreviousInfo}
+                      className="shrink-0 font-sans text-[10px] font-bold tracking-wider text-brand-blue uppercase hover:text-ink whitespace-nowrap"
+                    >
+                      Dùng thông tin lần trước
+                    </button>
+                  </div>
+                )}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <Field label="Họ và tên" required half>
                     <input type="text" value={form.name} onChange={set("name")} placeholder="Nguyễn Khánh Linh" className={`${inputCls} ${missing("name") ? "border-red-300" : ""}`} />

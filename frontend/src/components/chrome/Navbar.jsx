@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Icon } from "@/lib/icons";
 import { useCart, openCartDrawer } from "@/lib/cart";
 import CartDrawer from "@/components/chrome/CartDrawer";
+import SearchModal from "@/components/chrome/SearchModal";
 
 const NAV_LEFT = [
   ["Trang Chủ", "/", "home"],
@@ -15,7 +16,7 @@ const NAV_LEFT = [
 const NAV_RIGHT = [
   ["Sản Phẩm", "/shop", "shop"],
   ["Blog", "/blog", "blog"],
-  ["Liên Hệ", "/contact", "contact"],
+  ["Case Study", "/case-study", "case-study"],
 ];
 
 function NavLink({ label, href, navKey, active }) {
@@ -23,16 +24,17 @@ function NavLink({ label, href, navKey, active }) {
   return (
     <Link
       href={href}
-      className={`relative font-sans text-[11px] font-bold tracking-[0.16em] uppercase transition-colors ${on ? "text-brand-blue" : "text-ink/70 hover:text-brand-blue"} after:content-[''] after:absolute after:-bottom-1.5 after:left-0 after:right-0 after:h-px after:bg-brand-blue after:origin-left after:transition-transform after:duration-300 ${on ? "after:scale-x-100" : "after:scale-x-0 hover:after:scale-x-100"}`}
+      className={`relative shrink-0 whitespace-nowrap font-sans text-[11px] font-bold tracking-[0.16em] uppercase transition-colors ${on ? "text-brand-blue" : "text-ink/70 hover:text-brand-blue"} after:content-[''] after:absolute after:-bottom-1.5 after:left-0 after:right-0 after:h-px after:bg-brand-blue after:origin-left after:transition-transform after:duration-300 ${on ? "after:scale-x-100" : "after:scale-x-0 hover:after:scale-x-100"}`}
     >
       {label}
     </Link>
   );
 }
 
-export default function Navbar({ onOpenBooking, onOpenQuiz, active = "home" }) {
+export default function Navbar({ onOpenQuiz, active = "home" }) {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const { count: cartCount } = useCart();
 
   useEffect(() => {
@@ -48,13 +50,13 @@ export default function Navbar({ onOpenBooking, onOpenQuiz, active = "home" }) {
         style={{
           ...(scrolled
             ? undefined
-            : { background: "linear-gradient(to bottom, #ffffff 34%, rgba(255,255,255,0))" }),
+            : { background: "linear-gradient(to bottom, #ffffff 65%, rgba(255,255,255,0))" }),
           borderWidth: "0px",
         }}
         className={`w-full fixed top-0 inset-x-0 z-50 transition-all duration-300 ${scrolled ? "bg-white/95 backdrop-blur-md shadow-[0_6px_30px_rgba(44,74,111,.08)] border-b border-divider" : "border-b border-transparent"}`}
       >
-      <div className="max-w-7xl mx-auto px-6 h-[104px] grid grid-cols-[1fr_auto_1fr] items-center gap-6">
-        <nav className="hidden lg:flex items-center gap-9 justify-start">
+      <div className="max-w-7xl mx-auto px-6 h-[104px] grid grid-cols-[1fr_auto_1fr] items-center gap-4">
+        <nav className="hidden lg:flex items-center gap-9 justify-end">
           {NAV_LEFT.map(([t, h, k]) => (
             <NavLink key={h} label={t} href={h} navKey={k} active={active} />
           ))}
@@ -68,11 +70,11 @@ export default function Navbar({ onOpenBooking, onOpenQuiz, active = "home" }) {
           {open ? <Icon.X size={22} /> : <Icon.Menu size={22} />}
         </button>
 
-        <Link href="/" className="justify-self-center flex items-center px-2">
-          <img src="/assets/logo-lennie.png" alt="Lennie SkinLab" className="h-16 md:h-[72px] w-auto" />
+        <Link href="/" className="justify-self-center flex items-center px-4 md:px-6">
+          <img src="/assets/logo-lennie.png" alt="Lennie SkinLab" className="h-20 md:h-[88px] w-auto" />
         </Link>
 
-        <div className="flex items-center gap-7 justify-end">
+        <div className="flex items-center gap-7 justify-start">
           <nav className="hidden lg:flex items-center gap-9">
             {NAV_RIGHT.map(([t, h, k]) => (
               <NavLink key={h} label={t} href={h} navKey={k} active={active} />
@@ -81,9 +83,10 @@ export default function Navbar({ onOpenBooking, onOpenQuiz, active = "home" }) {
           <div className="flex items-center gap-5">
             <button
               type="button"
-              onClick={onOpenQuiz}
-              className="hidden xl:block text-ink/75 hover:text-brand-blue transition-colors"
-              title="Phân tích da"
+              onClick={() => setSearchOpen(true)}
+              className="text-ink/75 hover:text-brand-blue transition-colors"
+              title="Tìm kiếm"
+              aria-label="Tìm kiếm"
             >
               <Icon.Search size={18} stroke={1.8} />
             </button>
@@ -97,10 +100,11 @@ export default function Navbar({ onOpenBooking, onOpenQuiz, active = "home" }) {
             </button>
             <button
               type="button"
-              onClick={onOpenBooking}
-              className="hidden sm:block whitespace-nowrap bg-brand-blue text-white font-sans text-[10px] font-bold tracking-widest px-5 py-2.5 rounded-full hover:bg-ink transition-colors uppercase"
+              onClick={onOpenQuiz}
+              className="hidden sm:flex items-center gap-1.5 whitespace-nowrap bg-brand-blue text-white font-sans text-[10px] font-bold tracking-widest px-5 py-2.5 rounded-full hover:bg-ink transition-colors uppercase shrink-0"
             >
-              Đặt lịch
+              <Icon.Sparkles size={14} stroke={1.8} className="shrink-0" />
+              Phân tích da
             </button>
           </div>
         </div>
@@ -121,16 +125,18 @@ export default function Navbar({ onOpenBooking, onOpenQuiz, active = "home" }) {
           <button
             onClick={() => {
               setOpen(false);
-              onOpenBooking && onOpenBooking();
+              onOpenQuiz && onOpenQuiz();
             }}
-            className="mt-2 bg-brand-blue text-white font-sans text-[10px] font-bold tracking-widest px-4 py-3 rounded-full uppercase"
+            className="mt-2 flex items-center justify-center gap-2 bg-brand-blue text-white font-sans text-[10px] font-bold tracking-widest px-4 py-3 rounded-full uppercase"
           >
-            Đặt lịch tư vấn
+            <Icon.Sparkles size={14} stroke={1.8} />
+            Phân tích da
           </button>
         </div>
       )}
       </header>
       <CartDrawer />
+      <SearchModal isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
     </>
   );
 }

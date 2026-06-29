@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Icon } from "@/lib/icons";
 
 export default function Testimonials({ reviews }) {
@@ -18,7 +19,7 @@ export default function Testimonials({ reviews }) {
         <div className="relative w-full overflow-hidden py-6 select-none">
           <div className="marquee-slow flex gap-8">
             {doubled.map((r, idx) => (
-              <div key={idx} className="flip-card w-[345px] h-[375px] shrink-0 cursor-pointer">
+              <Link key={idx} href="/case-study" className="flip-card w-[345px] h-[375px] shrink-0 cursor-pointer block">
                 <div className="flip-inner relative w-full h-full">
                   <div className="flip-face absolute inset-0 bg-white text-ink rounded-md p-6 flex flex-col justify-between border border-divider shadow-sm">
                     <div className="space-y-4">
@@ -67,7 +68,7 @@ export default function Testimonials({ reviews }) {
                     </div>
                   </div>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         </div>

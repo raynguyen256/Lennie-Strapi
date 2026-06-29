@@ -8,7 +8,9 @@ const { products: productsCatalog } = require('./seed-data/products');
 const { posts: blogPostsCatalog } = require('./seed-data/blog-posts');
 const { branches: branchesCatalog } = require('./seed-data/branches');
 
-const ASSETS_DIR = path.join(__dirname, '..', '..', 'frontend', 'public', 'assets');
+const ASSETS_DIR = process.env.SEED_ASSETS_DIR
+  ? path.resolve(process.env.SEED_ASSETS_DIR)
+  : path.join(__dirname, '..', '..', 'frontend', 'public', 'assets');
 
 const MIME_TYPES = {
   '.png': 'image/png',
@@ -324,7 +326,7 @@ async function seed(strapi) {
       hotline: '+84 909 123 456',
       primaryCta: { label: 'Đặt lịch trị liệu ngay', url: '/booking', style: 'primary' },
       secondaryCta: { label: 'Phân tích da miễn phí', url: '/booking?quiz=1', style: 'secondary' },
-      messengerUrl: 'https://m.me/lennie.skinlab',
+      messengerUrl: 'https://www.facebook.com/share/1Ea37BVL7W/?mibextid=wwXIfr',
       zaloUrl: 'https://zalo.me/84909123456',
       whatsappUrl: '',
     },
@@ -338,9 +340,9 @@ async function seed(strapi) {
       mapsUrl: 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent('142 Võ Văn Tần, Quận 3, TP.HCM'),
       openingHours: [{ daysLabel: 'Thứ 2 - Thứ 7', hours: '8:00 - 20:00' }],
       email: 'hello@lennieskinlab.vn',
-      facebookUrl: '',
-      instagramUrl: '',
-      tiktokUrl: '',
+      facebookUrl: 'https://www.facebook.com/share/1Ea37BVL7W/?mibextid=wwXIfr',
+      instagramUrl: 'https://www.instagram.com/lennieskinlab?igsh=bHh2a2VyMG9ia2Iy',
+      tiktokUrl: 'https://www.tiktok.com/@ths.ds.hoanghongtham?_r=1&_t=ZS-97OmkFKXX76',
     },
   });
   strapi.log.info('[seed] contact-info created');
@@ -392,4 +394,127 @@ async function seed(strapi) {
   strapi.log.info('[seed] done');
 }
 
-module.exports = { seed };
+const skinResultsCatalog = [
+  {
+    title: 'Cá nhân hóa routine 1-1 cho nám kháng trị, chai lì hoạt chất',
+    img: 'feedback-1.png',
+    timeframe: '8 tuần',
+    caseSummary:
+      'Khách hàng từng dùng nhiều hoạt chất trị nám nhưng da đã "chai lì", không còn đáp ứng. Sau khi đo vẽ lại bản đồ sắc tố và thiết kế routine cá nhân hóa, nám mảng được đẩy rõ rệt, nền da sáng và đều màu hơn.',
+    treatmentSteps: [
+      'Đánh giá lâm sàng bản đồ sắc tố và mức độ kháng hoạt chất hiện tại',
+      'Thiết kế lại routine cá nhân hóa, luân phiên hoạt chất để tránh chai lì',
+      'Theo dõi tiến triển hàng tuần và hiệu chỉnh nồng độ theo phản ứng da',
+    ],
+    disclaimer: 'Kết quả có thể khác nhau tùy theo cơ địa và mức độ đáp ứng của từng khách hàng.',
+    concern: 'Nám & Sắc tố',
+    resultType: 'Sáng da',
+    featured: true,
+  },
+  {
+    title: 'Ức chế sắc tố, cải thiện lão hóa và nhăn chùng',
+    img: 'feedback-2.png',
+    timeframe: '6 tuần',
+    caseSummary:
+      'Da khách hàng có nám kèm dấu hiệu lão hóa, nhăn chùng vùng má và rãnh mũi má. Phác đồ kết hợp ức chế sắc tố và kích thích tái tạo giúp nền da săn chắc, sáng và đều màu hơn rõ rệt.',
+    treatmentSteps: [
+      'Làm sạch sâu và phục hồi hàng rào bảo vệ da trước khi can thiệp hoạt chất mạnh',
+      'Kết hợp hoạt chất ức chế melanin với dưỡng chất kích thích sinh collagen',
+      'Tái khám định kỳ để điều chỉnh tỷ lệ hoạt chất theo tốc độ cải thiện',
+    ],
+    disclaimer: 'Hình ảnh minh họa từ hồ sơ điều trị thực tế, đã được khách hàng đồng ý chia sẻ.',
+    concern: 'Lão hóa',
+    resultType: 'Trẻ hóa',
+    featured: true,
+  },
+  {
+    title: 'Phác đồ peel đặc trị tại nhà cho nền da nám, sắc tố',
+    img: 'feedback-3.png',
+    timeframe: '4 tuần',
+    caseSummary:
+      'Khách hàng mong muốn cải thiện nám và sắc tố không đều màu bằng phác đồ peel nhẹ tại nhà. Sau một tháng, da sáng và đều màu hơn, lỗ chân lông se khít, kết cấu da mịn hơn rõ rệt.',
+    treatmentSteps: [
+      'Test phản ứng da trước khi bắt đầu chu trình peel tại nhà',
+      'Peel nồng độ thấp theo lịch trình cá nhân hóa, cách ngày',
+      'Phục hồi và cấp ẩm chuyên sâu sau mỗi lần peel để hạn chế kích ứng',
+    ],
+    disclaimer: 'Phác đồ peel tại nhà cần có chỉ định và theo dõi từ chuyên gia, không tự áp dụng nồng độ cao.',
+    concern: 'Nám & Sắc tố',
+    resultType: 'Sáng da',
+    featured: false,
+  },
+  {
+    title: 'Phục hồi làn da bị kích ứng đỏ rát sau 1 tháng',
+    img: 'feedback-4.png',
+    timeframe: '4 tuần',
+    caseSummary:
+      'Da khách hàng kích ứng nặng, đỏ rát lan rộng vùng má do dùng sai sản phẩm trước đó. Phác đồ phục hồi tập trung làm dịu và củng cố hàng rào bảo vệ da đã giúp tình trạng đỏ rát cải thiện rõ, da khỏe và căng bóng hơn.',
+    treatmentSteps: [
+      'Ngưng toàn bộ hoạt chất gây kích ứng, chỉ dùng sản phẩm làm dịu tối giản',
+      'Củng cố hàng rào bảo vệ da bằng dưỡng chất phục hồi chuyên sâu',
+      'Tái giới thiệu routine chăm da từng bước sau khi da ổn định',
+    ],
+    disclaimer: 'Kết quả phục hồi phụ thuộc vào mức độ kích ứng ban đầu và việc tuân thủ phác đồ của khách hàng.',
+    concern: 'Da nhạy cảm',
+    resultType: 'Phục hồi',
+    featured: true,
+  },
+  {
+    title: 'Kiểm soát mụn viêm, loạn khuẩn bằng dược mỹ phẩm cao cấp',
+    img: 'feedback-5.png',
+    timeframe: '6 tuần',
+    caseSummary:
+      'Khách hàng bị mụn viêm, ổ viêm và loạn khuẩn da lan rộng hai bên má. Sau phác đồ kiểm soát vi khuẩn và kháng viêm, tình trạng mụn được kiểm soát, hàng rào bảo vệ da được củng cố, nền da khỏe hơn.',
+    treatmentSteps: [
+      'Xác định nguyên nhân loạn khuẩn và mức độ viêm để chọn hoạt chất phù hợp',
+      'Kiểm soát vi khuẩn gây mụn kết hợp kháng viêm dịu nhẹ, tránh bào mòn da',
+      'Củng cố hàng rào bảo vệ da song song với việc kiểm soát dầu và cồi mụn',
+    ],
+    disclaimer: 'Mức độ cải thiện mụn viêm có thể khác nhau tùy cơ địa, không thay thế chỉ định của bác sĩ da liễu khi cần.',
+    concern: 'Mụn',
+    resultType: 'Phục hồi',
+    featured: false,
+  },
+];
+
+async function seedSkinResults(strapi) {
+  const existingCount = await strapi.documents('api::skin-result.skin-result').count();
+  if (existingCount > 0) {
+    strapi.log.info('[seed] skin-results already present, skipping');
+    return;
+  }
+
+  strapi.log.info('[seed] seeding skin-results (case study mock data)...');
+
+  const concernByName = {};
+  for (const name of skinConcerns) {
+    concernByName[name] = await findOrCreate(strapi, 'api::skin-concern.skin-concern', { name }, { name, slug: slugify(name) });
+  }
+
+  const resultTypeByName = {};
+  for (const name of resultTypes) {
+    resultTypeByName[name] = await findOrCreate(strapi, 'api::result-type.result-type', { name }, { name, slug: slugify(name) });
+  }
+
+  for (const c of skinResultsCatalog) {
+    const photo = await uploadAsset(strapi, c.img);
+    await strapi.documents('api::skin-result.skin-result').create({
+      data: {
+        title: c.title,
+        beforeImage: photo?.id,
+        afterImage: photo?.id,
+        timeframe: c.timeframe,
+        caseSummary: c.caseSummary,
+        treatmentSteps: blocksFromParagraphs(c.treatmentSteps),
+        disclaimer: c.disclaimer,
+        featured: c.featured,
+        skinConcerns: concernByName[c.concern] ? [concernByName[c.concern].documentId] : [],
+        resultType: resultTypeByName[c.resultType]?.documentId,
+      },
+      status: 'published',
+    });
+  }
+  strapi.log.info('[seed] skin-results created');
+}
+
+module.exports = { seed, seedSkinResults };

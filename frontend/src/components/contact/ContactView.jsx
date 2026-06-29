@@ -111,8 +111,8 @@ export default function ContactView({ content }) {
 
       <CTABand onOpenBooking={() => setBookingOpen(true)} secondaryHref="/services" />
 
-      <Footer />
-      <FloatingActions onOpenBooking={() => setBookingOpen(true)} />
+      <Footer facebookUrl={content.facebookUrl} instagramUrl={content.instagramUrl} tiktokUrl={content.tiktokUrl} zaloUrl={content.zaloUrl} />
+      <FloatingActions onOpenBooking={() => setBookingOpen(true)} messengerUrl={content.messengerUrl} />
       <QuizModal isOpen={quizOpen} onClose={() => setQuizOpen(false)} />
       <BookingModal isOpen={bookingOpen} onClose={() => setBookingOpen(false)} />
     </div>

@@ -1,6 +1,6 @@
 'use strict';
 
-const { seed } = require('./seed');
+const { seed, seedSkinResults } = require('./seed');
 const { seedAdminLayouts } = require('./admin-layouts');
 
 const COLLECTION_PERMISSIONS = [
@@ -72,6 +72,13 @@ module.exports = {
       await seed(strapi);
     } catch (err) {
       strapi.log.error(`[seed] failed: ${err.message}`);
+      strapi.log.error(err.stack);
+    }
+
+    try {
+      await seedSkinResults(strapi);
+    } catch (err) {
+      strapi.log.error(`[seed] skin-results failed: ${err.message}`);
       strapi.log.error(err.stack);
     }
 

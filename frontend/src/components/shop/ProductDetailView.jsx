@@ -15,6 +15,7 @@ import ProductRating from "@/components/shop/ProductRating";
 import ProductQuantitySelector from "@/components/shop/ProductQuantitySelector";
 import ProductTrustBadges from "@/components/shop/ProductTrustBadges";
 import ProductTabs from "@/components/shop/ProductTabs";
+import ProductReviews from "@/components/shop/ProductReviews";
 import { Icon } from "@/lib/icons";
 import { CartStore } from "@/lib/cart";
 
@@ -106,6 +107,8 @@ export default function ProductDetailView({ product }) {
       </section>
 
       <ProductTabs product={product} />
+
+      <ProductReviews reviews={product.productReviews} rating={product.rating} reviewCount={product.reviews} />
 
       {product.related?.length > 0 && (
         <section className="bg-brand-blue-light py-20 border-b border-divider">

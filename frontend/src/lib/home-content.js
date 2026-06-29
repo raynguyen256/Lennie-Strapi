@@ -95,6 +95,7 @@ export async function getHomeContent() {
   const productList = products?.length
     ? products.map((p) => ({
         id: p.documentId,
+        slug: p.slug,
         brand: p.brand,
         name: p.name,
         tag: p.tag,
@@ -102,10 +103,17 @@ export async function getHomeContent() {
         img: getStrapiMedia(p.image) || fallbackProducts[0].img,
         badge: p.badge || null,
         cats: (p.tags || []).map((t) => t.name),
+        type: p.type || "",
+        skinTypes: p.skinTypes?.length ? p.skinTypes : [],
+        rating: p.rating || 0,
+        reviews: p.reviews || 0,
+        excerpt: blocksToText(p.description) || "",
       }))
-    : fallbackProducts;
+    : fallbackProducts.map((p) => ({ ...p, type: "", skinTypes: [], rating: 0, reviews: 0, excerpt: "" }));
 
-  const partnerBrandNames = partnerBrandsData?.length ? partnerBrandsData.map((b) => b.name) : fallbackPartnerBrands;
+  const partnerBrandList = partnerBrandsData?.length
+    ? partnerBrandsData.map((b) => ({ name: b.name, logo: getStrapiMedia(b.logo) }))
+    : fallbackPartnerBrands.map((name) => ({ name, logo: null }));
 
   const teamData = teamMembers?.length
     ? teamMembers.map((t) => ({ name: t.name, role: t.role, img: getStrapiMedia(t.photo) || fallbackTeamData[0].img }))
@@ -145,7 +153,7 @@ export async function getHomeContent() {
     mantraCards,
     servicesSlides,
     products: productList,
-    partnerBrands: partnerBrandNames,
+    partnerBrands: partnerBrandList,
     teamData,
     reviewsData,
     faqs: faqList,

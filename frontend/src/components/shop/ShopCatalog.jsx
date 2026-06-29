@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import ShopFilters from "@/components/shop/ShopFilters";
 import ShopSortBar from "@/components/shop/ShopSortBar";
 import ShopProductCard from "@/components/shop/ShopProductCard";
@@ -11,12 +12,15 @@ import { PRICE_BANDS } from "@/lib/data";
 const PER_PAGE = 6;
 
 export default function ShopCatalog({ products, added, onAdd, onOpenQuiz }) {
+  const searchParams = useSearchParams();
+  const initialQuery = searchParams.get("q") || "";
   const [types, setTypes] = useState([]);
   const [skins, setSkins] = useState([]);
   const [band, setBand] = useState("all");
   const [sort, setSort] = useState("featured");
   const [page, setPage] = useState(1);
   const [quick, setQuick] = useState(null);
+  const [query, setQuery] = useState(initialQuery);
 
   const toggle = (setter, arr) => (v) => {
     setter(arr.includes(v) ? arr.filter((x) => x !== v) : [...arr, v]);
@@ -25,14 +29,19 @@ export default function ShopCatalog({ products, added, onAdd, onOpenQuiz }) {
 
   const filtered = useMemo(() => {
     const bandTest = PRICE_BANDS.find((b) => b.id === band).test;
+    const term = query.trim().toLowerCase();
     let r = products.filter(
-      (p) => (types.length === 0 || types.includes(p.type)) && (skins.length === 0 || p.skinTypes.some((s) => skins.includes(s))) && bandTest(p)
+      (p) =>
+        (types.length === 0 || types.includes(p.type)) &&
+        (skins.length === 0 || p.skinTypes.some((s) => skins.includes(s))) &&
+        bandTest(p) &&
+        (!term || p.name.toLowerCase().includes(term) || p.brand.toLowerCase().includes(term))
     );
     if (sort === "price-asc") r = [...r].sort((a, b) => a.priceValue - b.priceValue);
     else if (sort === "price-desc") r = [...r].sort((a, b) => b.priceValue - a.priceValue);
     else if (sort === "rating") r = [...r].sort((a, b) => b.reviews - a.reviews);
     return r;
-  }, [products, types, skins, band, sort]);
+  }, [products, types, skins, band, sort, query]);
 
   const pages = Math.max(1, Math.ceil(filtered.length / PER_PAGE));
   const cur = Math.min(page, pages);

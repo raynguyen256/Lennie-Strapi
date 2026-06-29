@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import Navbar from "@/components/chrome/Navbar";
 import Footer from "@/components/chrome/Footer";
 import FloatingActions from "@/components/chrome/FloatingActions";
@@ -41,7 +41,9 @@ export default function ShopView({ products }) {
         img="/assets/remix/herb-mix.png"
       />
 
-      <ShopCatalog products={products} added={added} onAdd={addToCart} onOpenQuiz={() => setQuizOpen(true)} />
+      <Suspense fallback={null}>
+        <ShopCatalog products={products} added={added} onAdd={addToCart} onOpenQuiz={() => setQuizOpen(true)} />
+      </Suspense>
 
       <PartnerStrip label="Thương hiệu đối tác chính hãng" />
 

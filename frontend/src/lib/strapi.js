@@ -130,6 +130,13 @@ export async function getProductBySlug(slug) {
   return data?.[0] || null;
 }
 
+export async function getTestimonialsByProductSlug(slug) {
+  return fetchAPI("/testimonials", {
+    populate: { photo: true, topic: true },
+    filters: { relatedProducts: { slug: { $eq: slug } } },
+  });
+}
+
 export async function getTestimonials(params = {}) {
   return fetchAPI("/testimonials", { populate: { photo: true, topic: true, relatedServices: true }, ...params });
 }
