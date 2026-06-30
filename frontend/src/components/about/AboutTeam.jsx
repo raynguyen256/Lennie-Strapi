@@ -34,12 +34,9 @@ export default function AboutTeam({ team }) {
                 <div className="h-64 bg-brand-blue-light overflow-hidden relative group">
                   <img src={m.img} alt={m.name} draggable="false" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 select-none pointer-events-none" />
                 </div>
-                <div className="p-5 flex justify-between items-center bg-white border-t border-divider">
-                  <div>
-                    <h4 className="font-sans text-[13px] font-bold text-ink tracking-wide uppercase">{m.name}</h4>
-                    <p className="font-sans text-[11px] text-[#6F8CA8] mt-0.5">{m.role}</p>
-                  </div>
-                  <span className="w-7 h-7 bg-brand-blue-light text-brand-blue rounded flex items-center justify-center font-bold text-xs shrink-0">in</span>
+                <div className="p-5 bg-white border-t border-divider">
+                  <h4 className="font-sans text-[13px] font-bold text-ink tracking-wide uppercase">{m.name}</h4>
+                  <p className="font-sans text-[11px] text-[#6F8CA8] mt-0.5">{m.role}</p>
                 </div>
               </div>
             ))}

@@ -4,6 +4,7 @@ import { useState } from "react";
 import Navbar from "@/components/chrome/Navbar";
 import Footer from "@/components/chrome/Footer";
 import FloatingActions from "@/components/chrome/FloatingActions";
+import SocialRail from "@/components/chrome/SocialRail";
 import CartToast from "@/components/chrome/CartToast";
 import QuizModal from "@/components/chrome/QuizModal";
 import BookingModal from "@/components/chrome/BookingModal";
@@ -57,6 +58,7 @@ export default function HomeView({ content }) {
       <Footer />
 
       <FloatingActions onOpenBooking={() => setBookingOpen(true)} />
+      <SocialRail />
       <CartToast show={toast.show} product={toast.product} />
       <QuizModal isOpen={quizOpen} onClose={() => setQuizOpen(false)} />
       <BookingModal isOpen={bookingOpen} onClose={() => setBookingOpen(false)} />

@@ -4,16 +4,17 @@ import { Suspense, useState } from "react";
 import Navbar from "@/components/chrome/Navbar";
 import Footer from "@/components/chrome/Footer";
 import FloatingActions from "@/components/chrome/FloatingActions";
+import SocialRail from "@/components/chrome/SocialRail";
 import CartToast from "@/components/chrome/CartToast";
 import QuizModal from "@/components/chrome/QuizModal";
 import BookingModal from "@/components/chrome/BookingModal";
 import PageHero from "@/components/chrome/PageHero";
-import PartnerStrip from "@/components/chrome/PartnerStrip";
+import PartnerMarquee from "@/components/home/PartnerMarquee";
 import ConsultSection from "@/components/chrome/ConsultSection";
 import ShopCatalog from "@/components/shop/ShopCatalog";
 import { CartStore } from "@/lib/cart";
 
-export default function ShopView({ products }) {
+export default function ShopView({ products, partnerBrands }) {
   const [quizOpen, setQuizOpen] = useState(false);
   const [bookingOpen, setBookingOpen] = useState(false);
   const [added, setAdded] = useState({});
@@ -45,7 +46,7 @@ export default function ShopView({ products }) {
         <ShopCatalog products={products} added={added} onAdd={addToCart} onOpenQuiz={() => setQuizOpen(true)} />
       </Suspense>
 
-      <PartnerStrip label="Thương hiệu đối tác chính hãng" />
+      <PartnerMarquee brands={partnerBrands} label="Thương hiệu đối tác chính hãng" />
 
       <ConsultSection
         id="tu-van-san-pham"
@@ -60,6 +61,7 @@ export default function ShopView({ products }) {
 
       <Footer />
       <FloatingActions onOpenBooking={() => setBookingOpen(true)} />
+      <SocialRail />
       <CartToast show={toast.show} product={toast.product} />
       <QuizModal isOpen={quizOpen} onClose={() => setQuizOpen(false)} />
       <BookingModal isOpen={bookingOpen} onClose={() => setBookingOpen(false)} />

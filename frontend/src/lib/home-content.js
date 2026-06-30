@@ -48,6 +48,13 @@ const FALLBACK_FOUNDER = {
   portrait: "/assets/founder-portrait.png",
 };
 
+/** Map danh sách partner-brand từ Strapi sang {name, logo}, fallback về data.js (text-only) khi Strapi rỗng/down */
+export function mapPartnerBrands(partnerBrandsData) {
+  return partnerBrandsData?.length
+    ? partnerBrandsData.map((b) => ({ name: b.name, logo: getStrapiMedia(b.logo) }))
+    : fallbackPartnerBrands.map((name) => ({ name, logo: null }));
+}
+
 /** Fetch + map toàn bộ dữ liệu Strapi cho trang chủ, fallback về data.js khi Strapi rỗng/down */
 export async function getHomeContent() {
   const [homepage, founder, products, teamMembers, partnerBrandsData, testimonials, faqsData] = await Promise.all([
@@ -111,9 +118,7 @@ export async function getHomeContent() {
       }))
     : fallbackProducts.map((p) => ({ ...p, type: "", skinTypes: [], rating: 0, reviews: 0, excerpt: "" }));
 
-  const partnerBrandList = partnerBrandsData?.length
-    ? partnerBrandsData.map((b) => ({ name: b.name, logo: getStrapiMedia(b.logo) }))
-    : fallbackPartnerBrands.map((name) => ({ name, logo: null }));
+  const partnerBrandList = mapPartnerBrands(partnerBrandsData);
 
   const teamData = teamMembers?.length
     ? teamMembers.map((t) => ({ name: t.name, role: t.role, img: getStrapiMedia(t.photo) || fallbackTeamData[0].img }))

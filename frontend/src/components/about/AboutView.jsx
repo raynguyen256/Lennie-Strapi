@@ -4,11 +4,12 @@ import { useState } from "react";
 import Navbar from "@/components/chrome/Navbar";
 import Footer from "@/components/chrome/Footer";
 import FloatingActions from "@/components/chrome/FloatingActions";
+import SocialRail from "@/components/chrome/SocialRail";
 import QuizModal from "@/components/chrome/QuizModal";
 import BookingModal from "@/components/chrome/BookingModal";
 import PageHero from "@/components/chrome/PageHero";
 import StatStrip from "@/components/chrome/StatStrip";
-import PartnerStrip from "@/components/chrome/PartnerStrip";
+import PartnerMarquee from "@/components/home/PartnerMarquee";
 import CTABand from "@/components/chrome/CTABand";
 import AboutStory from "@/components/about/AboutStory";
 import AboutValues from "@/components/about/AboutValues";
@@ -37,11 +38,12 @@ export default function AboutView({ content }) {
       <AboutValues brandValues={content.brandValues} />
       <AboutFounder founder={content.founder} founderTimeline={content.founderTimeline} />
       <AboutTeam team={content.team} />
-      <PartnerStrip label="Hợp tác ủy quyền cùng 50+ thương hiệu dược mỹ phẩm quốc tế" />
+      <PartnerMarquee brands={content.partnerBrands} label="Hợp tác ủy quyền cùng 50+ thương hiệu dược mỹ phẩm quốc tế" />
       <CTABand onOpenBooking={() => setBookingOpen(true)} />
 
       <Footer />
       <FloatingActions onOpenBooking={() => setBookingOpen(true)} />
+      <SocialRail />
       <QuizModal isOpen={quizOpen} onClose={() => setQuizOpen(false)} />
       <BookingModal isOpen={bookingOpen} onClose={() => setBookingOpen(false)} />
     </div>

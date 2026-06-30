@@ -55,8 +55,8 @@ export default function Navbar({ onOpenQuiz, active = "home" }) {
         }}
         className={`w-full fixed top-0 inset-x-0 z-50 transition-all duration-300 ${scrolled ? "bg-white/95 backdrop-blur-md shadow-[0_6px_30px_rgba(44,74,111,.08)] border-b border-divider" : "border-b border-transparent"}`}
       >
-      <div className="max-w-7xl mx-auto px-6 h-[104px] grid grid-cols-[1fr_auto_1fr] items-center gap-4">
-        <nav className="hidden lg:flex items-center gap-9 justify-end">
+      <div className="max-w-7xl mx-auto px-6 h-[104px] relative flex items-center justify-between gap-4">
+        <nav className="hidden lg:flex items-center gap-9">
           {NAV_LEFT.map(([t, h, k]) => (
             <NavLink key={h} label={t} href={h} navKey={k} active={active} />
           ))}
@@ -65,16 +65,16 @@ export default function Navbar({ onOpenQuiz, active = "home" }) {
         <button
           type="button"
           onClick={() => setOpen(!open)}
-          className="lg:hidden text-ink justify-self-start"
+          className="lg:hidden text-ink"
         >
           {open ? <Icon.X size={22} /> : <Icon.Menu size={22} />}
         </button>
 
-        <Link href="/" className="justify-self-center flex items-center px-4 md:px-6">
+        <Link href="/" className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center px-4 md:px-6">
           <img src="/assets/logo-lennie.png" alt="Lennie SkinLab" className="h-20 md:h-[88px] w-auto" />
         </Link>
 
-        <div className="flex items-center gap-7 justify-start">
+        <div className="flex items-center gap-7">
           <nav className="hidden lg:flex items-center gap-9">
             {NAV_RIGHT.map(([t, h, k]) => (
               <NavLink key={h} label={t} href={h} navKey={k} active={active} />
@@ -90,6 +90,14 @@ export default function Navbar({ onOpenQuiz, active = "home" }) {
             >
               <Icon.Search size={18} stroke={1.8} />
             </button>
+            <Link
+              href="/contact"
+              className="text-ink/75 hover:text-brand-blue transition-colors"
+              title="Liên hệ"
+              aria-label="Liên hệ"
+            >
+              <Icon.Pin size={18} stroke={1.8} />
+            </Link>
             <button type="button" onClick={openCartDrawer} className="text-ink/75 hover:text-brand-blue transition-colors relative" aria-label="Giỏ hàng">
               <Icon.Bag size={18} stroke={1.8} />
               <span
@@ -98,14 +106,13 @@ export default function Navbar({ onOpenQuiz, active = "home" }) {
                 {cartCount}
               </span>
             </button>
-            <button
-              type="button"
-              onClick={onOpenQuiz}
+            <Link
+              href="/booking"
               className="hidden sm:flex items-center gap-1.5 whitespace-nowrap bg-brand-blue text-white font-sans text-[10px] font-bold tracking-widest px-5 py-2.5 rounded-full hover:bg-ink transition-colors uppercase shrink-0"
             >
-              <Icon.Sparkles size={14} stroke={1.8} className="shrink-0" />
-              Phân tích da
-            </button>
+              <Icon.Calendar size={14} stroke={1.8} className="shrink-0" />
+              Đặt lịch
+            </Link>
           </div>
         </div>
       </div>
@@ -122,16 +129,14 @@ export default function Navbar({ onOpenQuiz, active = "home" }) {
               {label}
             </Link>
           ))}
-          <button
-            onClick={() => {
-              setOpen(false);
-              onOpenQuiz && onOpenQuiz();
-            }}
+          <Link
+            href="/booking"
+            onClick={() => setOpen(false)}
             className="mt-2 flex items-center justify-center gap-2 bg-brand-blue text-white font-sans text-[10px] font-bold tracking-widest px-4 py-3 rounded-full uppercase"
           >
-            <Icon.Sparkles size={14} stroke={1.8} />
-            Phân tích da
-          </button>
+            <Icon.Calendar size={14} stroke={1.8} />
+            Đặt lịch
+          </Link>
         </div>
       )}
       </header>

@@ -16,7 +16,9 @@ import {
   getBranches,
   getSkinResults,
   getTestimonialsByProductSlug,
+  getPartnerBrands,
 } from "@/lib/strapi";
+import { mapPartnerBrands } from "@/lib/home-content";
 import { FACEBOOK_URL, INSTAGRAM_URL, TIKTOK_URL, MESSENGER_URL } from "@/lib/social-links";
 import {
   productData as fallbackProducts,
@@ -81,13 +83,14 @@ function mapFounder(founder) {
 
 /** /about: founder + team + trust cards + brand values + founder timeline */
 export async function getAboutContent() {
-  const [founder, teamMembers] = await Promise.all([getFounder(), getTeamMembers()]);
+  const [founder, teamMembers, partnerBrandsData] = await Promise.all([getFounder(), getTeamMembers(), getPartnerBrands()]);
   const founderData = mapFounder(founder);
   const team = teamMembers?.length
     ? teamMembers.map((t) => ({ name: t.name, role: t.role, img: getStrapiMedia(t.photo) || fallbackTeamData[0].img }))
     : fallbackTeamData;
   const trustCards = founderData.trustPoints.map((t) => ({ title: t.title, desc: t.description, icon: t.icon }));
-  return { founder: founderData, team, trustCards, brandValues, founderTimeline };
+  const partnerBrands = mapPartnerBrands(partnerBrandsData);
+  return { founder: founderData, team, trustCards, brandValues, founderTimeline, partnerBrands };
 }
 
 /** Map 1 service Strapi sang dạng tóm tắt dùng cho /services và related services */
@@ -216,9 +219,9 @@ function mapFallbackProduct(p) {
 
 /** /shop: toàn bộ sản phẩm */
 export async function getShopArchive() {
-  const products = await getProducts();
-  if (products?.length) return products.map(mapProduct);
-  return fallbackProductsCatalog.map(mapFallbackProduct);
+  const [products, partnerBrandsData] = await Promise.all([getProducts(), getPartnerBrands()]);
+  const productList = products?.length ? products.map(mapProduct) : fallbackProductsCatalog.map(mapFallbackProduct);
+  return { products: productList, partnerBrands: mapPartnerBrands(partnerBrandsData) };
 }
 
 /** /shop/[slug]: chi tiết sản phẩm + sản phẩm liên quan */

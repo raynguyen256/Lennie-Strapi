@@ -4,6 +4,7 @@ import { useState } from "react";
 import Navbar from "@/components/chrome/Navbar";
 import Footer from "@/components/chrome/Footer";
 import FloatingActions from "@/components/chrome/FloatingActions";
+import SocialRail from "@/components/chrome/SocialRail";
 import QuizModal from "@/components/chrome/QuizModal";
 import BookingModal from "@/components/chrome/BookingModal";
 import PageHero from "@/components/chrome/PageHero";
@@ -120,6 +121,7 @@ export default function TestimonialsView({ reviews }) {
 
       <Footer />
       <FloatingActions onOpenBooking={() => setBookingOpen(true)} />
+      <SocialRail />
       <QuizModal isOpen={quizOpen} onClose={() => setQuizOpen(false)} />
       <BookingModal isOpen={bookingOpen} onClose={() => setBookingOpen(false)} />
     </div>
