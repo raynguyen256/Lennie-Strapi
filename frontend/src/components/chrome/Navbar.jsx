@@ -55,8 +55,8 @@ export default function Navbar({ onOpenQuiz, active = "home" }) {
         }}
         className={`w-full fixed top-0 inset-x-0 z-50 transition-all duration-300 ${scrolled ? "bg-white/95 backdrop-blur-md shadow-[0_6px_30px_rgba(44,74,111,.08)] border-b border-divider" : "border-b border-transparent"}`}
       >
-      <div className="max-w-7xl mx-auto px-6 h-[104px] relative flex items-center justify-between gap-4">
-        <nav className="hidden lg:flex items-center gap-9">
+      <div className="max-w-7xl mx-auto px-6 h-[104px] relative grid grid-cols-[1fr_auto_1fr] items-center gap-4">
+        <nav className="hidden lg:flex items-center gap-9 justify-self-start">
           {NAV_LEFT.map(([t, h, k]) => (
             <NavLink key={h} label={t} href={h} navKey={k} active={active} />
           ))}
@@ -65,16 +65,16 @@ export default function Navbar({ onOpenQuiz, active = "home" }) {
         <button
           type="button"
           onClick={() => setOpen(!open)}
-          className="lg:hidden text-ink"
+          className="lg:hidden text-ink justify-self-start"
         >
           {open ? <Icon.X size={22} /> : <Icon.Menu size={22} />}
         </button>
 
-        <Link href="/" className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center px-4 md:px-6">
+        <Link href="/" className="justify-self-center flex items-center px-4 md:px-6">
           <img src="/assets/logo-lennie.png" alt="Lennie SkinLab" className="h-20 md:h-[88px] w-auto" />
         </Link>
 
-        <div className="flex items-center gap-7">
+        <div className="flex items-center gap-7 justify-self-end">
           <nav className="hidden lg:flex items-center gap-9">
             {NAV_RIGHT.map(([t, h, k]) => (
               <NavLink key={h} label={t} href={h} navKey={k} active={active} />
