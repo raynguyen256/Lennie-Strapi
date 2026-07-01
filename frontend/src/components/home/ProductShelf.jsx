@@ -59,9 +59,7 @@ export default function ProductShelf({ products, categoryTags = [], onAddToCart 
                         {p.badge}
                       </span>
                     )}
-                    <button className="absolute top-3 right-3 z-10 w-8 h-8 rounded-full bg-white/80 border border-divider flex items-center justify-center text-ink-2 opacity-0 group-hover:opacity-100 transition-all hover:bg-ink hover:text-white" aria-label="Yêu thích">
-                      <Icon.Heart size={14} />
-                    </button>
+
                     <img src={p.img} alt={p.name} className="h-full w-auto object-contain transform group-hover:scale-105 transition-transform duration-500" />
                     <div className="absolute inset-x-0 bottom-0 p-3 flex justify-center opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 pointer-events-none">
                       <button
