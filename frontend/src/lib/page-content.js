@@ -272,7 +272,7 @@ function mapBlogPost(p) {
     readTime: p.readTime || "",
     featured: !!p.featured,
     img: getStrapiMedia(p.coverImage) || fallbackBlogPosts[0].img,
-    body: Array.isArray(p.body) && p.body.length ? p.body : null,
+    body: (typeof p.body === "string" && p.body.trim()) ? p.body : (Array.isArray(p.body) && p.body.length ? p.body : null),
   };
 }
 
