@@ -22,6 +22,10 @@ const COLLECTION_PERMISSIONS = [
   'product-review',
 ];
 
+const COLLECTION_CREATE_PERMISSIONS = [
+  'product-review',
+];
+
 const SINGLE_TYPE_PERMISSIONS = ['general-setting', 'contact-info', 'homepage', 'founder'];
 
 async function setPublicPermissions(strapi) {
@@ -44,6 +48,13 @@ async function setPublicPermissions(strapi) {
       if (!existingActions.has(actionName)) {
         toCreate.push({ action: actionName, role: publicRole.id });
       }
+    }
+  }
+
+  for (const name of COLLECTION_CREATE_PERMISSIONS) {
+    const actionName = `api::${name}.${name}.create`;
+    if (!existingActions.has(actionName)) {
+      toCreate.push({ action: actionName, role: publicRole.id });
     }
   }
 

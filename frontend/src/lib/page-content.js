@@ -195,6 +195,7 @@ function mapProduct(p, i) {
   return {
     slug: p.slug,
     id: p.documentId,
+    strapiId: p.documentId,
     brand: p.brand,
     name: p.name,
     type: p.type || "",

@@ -60,7 +60,12 @@ export default function ProductDetailView({ product }) {
             <div className="space-y-5">
               <span className="font-sans text-[10px] font-bold tracking-[0.22em] uppercase text-brand-teal">{product.brand}</span>
               <h1 className="font-serif text-[32px] md:text-[42px] text-ink font-light leading-tight tracking-tight">{product.name}</h1>
-              <ProductRating rating={product.rating} reviews={product.reviews} />
+              <ProductRating
+                rating={product.productReviews?.length
+                  ? product.productReviews.reduce((s, r) => s + (r.stars || 5), 0) / product.productReviews.length
+                  : product.rating}
+                reviews={product.productReviews?.length ?? product.reviews}
+              />
               <div className="flex items-end gap-3 pt-2">
                 <span className="font-serif text-4xl font-bold text-ink">{product.price}</span>
                 {product.oldPrice && <span className="font-sans text-lg text-ink-3 line-through mb-1">{product.oldPrice}</span>}
@@ -109,7 +114,7 @@ export default function ProductDetailView({ product }) {
 
       <ProductTabs product={product} />
 
-      <ProductReviews reviews={product.productReviews} rating={product.rating} reviewCount={product.reviews} />
+      <ProductReviews reviews={product.productReviews} productId={product.strapiId} />
 
       {product.related?.length > 0 && (
         <section className="bg-brand-blue-light py-20 border-b border-divider">

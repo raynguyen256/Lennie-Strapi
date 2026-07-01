@@ -145,6 +145,17 @@ export async function getProductReviewsBySlug(slug) {
   });
 }
 
+export async function createProductReview({ productId, name, stars, comment }) {
+  const url = `${STRAPI_PUBLIC_URL}/api/product-reviews`;
+  const res = await fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ data: { name, stars, comment, product: productId, verified: false } }),
+  });
+  if (!res.ok) throw new Error("Gửi đánh giá thất bại");
+  return res.json();
+}
+
 export async function getTestimonials(params = {}) {
   return fetchAPI("/testimonials", { populate: { photo: true, topic: true, relatedServices: true }, ...params });
 }
