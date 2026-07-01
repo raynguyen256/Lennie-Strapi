@@ -6,11 +6,11 @@ import { useReveal } from "@/lib/hooks";
 import { Icon } from "@/lib/icons";
 import ProductQuickViewModal from "@/components/shop/ProductQuickViewModal";
 
-export default function ProductShelf({ products, onAddToCart }) {
-  const [tag, setTag] = useState("#XEMTẤTCẢ");
+export default function ProductShelf({ products, categoryTags = [], onAddToCart }) {
+  const [tag, setTag] = useState("all");
   const [added, setAdded] = useState({});
   const [quick, setQuick] = useState(null);
-  const tags = ["#XEMTẤTCẢ", "#BÁNCHẠY", "#CẤPẨMSÂU", "#PHỤCHỒIDA"];
+  const tags = [{ slug: "all", label: "#XEMTẤTCẢ" }, ...categoryTags];
   const [ref, shown] = useReveal();
 
   const add = (p) => {
@@ -30,14 +30,14 @@ export default function ProductShelf({ products, onAddToCart }) {
           <div className="flex flex-wrap gap-2.5">
             {tags.map((t) => (
               <button
-                key={t}
+                key={t.slug}
                 type="button"
-                onClick={() => setTag(t)}
+                onClick={() => setTag(t.slug)}
                 className={`px-4 py-2 text-[10px] font-bold tracking-[0.12em] uppercase rounded-full border transition-all ${
-                  tag === t ? "border-brand-blue bg-brand-blue text-white shadow-sm" : "border-divider bg-white text-ink-2 hover:border-brand-blue"
+                  tag === t.slug ? "border-brand-blue bg-brand-blue text-white shadow-sm" : "border-divider bg-white text-ink-2 hover:border-brand-blue"
                 }`}
               >
-                {t}
+                {t.label}
               </button>
             ))}
           </div>
@@ -45,7 +45,7 @@ export default function ProductShelf({ products, onAddToCart }) {
 
         <div ref={ref} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {products.map((p, idx) => {
-            const dim = tag !== "#XEMTẤTCẢ" && !p.cats.includes(tag);
+            const dim = tag !== "all" && !p.cats.includes(tag);
             return (
               <div
                 key={p.id}

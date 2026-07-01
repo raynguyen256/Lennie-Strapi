@@ -14,7 +14,7 @@ export const productData = [
     price: "2.890.000₫",
     img: "/assets/product-hydrinity.png",
     badge: "Bán chạy",
-    cats: ["#XEMTẤTCẢ", "#BÁNCHẠY", "#PHỤCHỒIDA", "#CẤPẨMSÂU"],
+    cats: ["ban-chay", "phuc-hoi-da", "cap-am-sau"],
   },
   {
     id: "p2",
@@ -25,7 +25,7 @@ export const productData = [
     price: "3.250.000₫",
     img: "/assets/product-osmosis.png",
     badge: "Mới",
-    cats: ["#XEMTẤTCẢ", "#PHỤCHỒIDA"],
+    cats: ["phuc-hoi-da"],
   },
   {
     id: "p3",
@@ -36,7 +36,7 @@ export const productData = [
     price: "2.490.000₫",
     img: "/assets/product-viderm.png",
     badge: null,
-    cats: ["#XEMTẤTCẢ", "#BÁNCHẠY"],
+    cats: ["ban-chay"],
   },
   {
     id: "p4",
@@ -47,7 +47,7 @@ export const productData = [
     price: "1.890.000₫",
     img: "/assets/product-nescens.jpg",
     badge: "−15%",
-    cats: ["#XEMTẤTCẢ", "#CẤPẨMSÂU"],
+    cats: ["cap-am-sau"],
   },
 ];
 

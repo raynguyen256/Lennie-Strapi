@@ -39,7 +39,7 @@ export default function HomeView({ content }) {
       <Navbar active="home" onOpenBooking={() => setBookingOpen(true)} onOpenQuiz={() => setQuizOpen(true)} />
       <Hero hero={content.hero} onOpenBooking={() => setBookingOpen(true)} onOpenQuiz={() => setQuizOpen(true)} />
       <StatsBar stats={content.stats} />
-      <ProductShelf products={content.products} onAddToCart={addToCart} />
+      <ProductShelf products={content.products} categoryTags={content.productTags} onAddToCart={addToCart} />
       <Services slides={content.servicesSlides} onOpenBooking={() => setBookingOpen(true)} />
       <PartnerMarquee brands={content.partnerBrands} />
       <AboutUsHome />

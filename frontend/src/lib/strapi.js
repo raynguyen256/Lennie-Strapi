@@ -122,6 +122,13 @@ export async function getProducts(params = {}) {
   return fetchAPI("/products", { populate: { image: true, tags: true }, ...params });
 }
 
+export async function getProductTags() {
+  return fetchAPI("/product-tags", {
+    populate: { products: { fields: ["id"] } },
+    pagination: { pageSize: 100 },
+  });
+}
+
 export async function getProductBySlug(slug) {
   const data = await fetchAPI("/products", {
     populate: { image: true, tags: true },

@@ -4,6 +4,7 @@ import {
   getHomepage,
   getFounder,
   getProducts,
+  getProductTags,
   getTeamMembers,
   getPartnerBrands,
   getTestimonials,
@@ -57,10 +58,11 @@ export function mapPartnerBrands(partnerBrandsData) {
 
 /** Fetch + map toàn bộ dữ liệu Strapi cho trang chủ, fallback về data.js khi Strapi rỗng/down */
 export async function getHomeContent() {
-  const [homepage, founder, products, teamMembers, partnerBrandsData, testimonials, faqsData] = await Promise.all([
+  const [homepage, founder, products, productTagsData, teamMembers, partnerBrandsData, testimonials, faqsData] = await Promise.all([
     getHomepage(),
     getFounder(),
     getProducts(),
+    getProductTags(),
     getTeamMembers(),
     getPartnerBrands(),
     getTestimonials(),
@@ -109,7 +111,7 @@ export async function getHomeContent() {
         price: p.price,
         img: getStrapiMedia(p.image) || fallbackProducts[0].img,
         badge: p.badge || null,
-        cats: (p.tags || []).map((t) => t.name),
+        cats: (p.tags || []).map((t) => t.slug),
         type: p.type || "",
         skinTypes: p.skinTypes?.length ? p.skinTypes : [],
         rating: p.rating || 0,
@@ -117,6 +119,13 @@ export async function getHomeContent() {
         excerpt: blocksToText(p.description) || "",
       }))
     : fallbackProducts.map((p) => ({ ...p, type: "", skinTypes: [], rating: 0, reviews: 0, excerpt: "" }));
+
+  const productTags = productTagsData?.length
+    ? productTagsData
+        .map((t) => ({ slug: t.slug, label: `#${t.name.toUpperCase().replace(/\s+/g, '')}`, count: t.products?.length ?? 0 }))
+        .sort((a, b) => b.count - a.count)
+        .slice(0, 5)
+    : [];
 
   const partnerBrandList = mapPartnerBrands(partnerBrandsData);
 
@@ -158,6 +167,7 @@ export async function getHomeContent() {
     mantraCards,
     servicesSlides,
     products: productList,
+    productTags,
     partnerBrands: partnerBrandList,
     teamData,
     reviewsData,
