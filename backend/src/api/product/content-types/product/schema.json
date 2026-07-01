@@ -72,6 +72,12 @@
       "relation": "manyToMany",
       "target": "api::testimonial.testimonial",
       "mappedBy": "relatedProducts"
+    },
+    "productReviews": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::product-review.product-review",
+      "mappedBy": "product"
     }
   }
 }

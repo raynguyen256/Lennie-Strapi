@@ -137,6 +137,14 @@ export async function getTestimonialsByProductSlug(slug) {
   });
 }
 
+export async function getProductReviewsBySlug(slug) {
+  return fetchAPI("/product-reviews", {
+    filters: { product: { slug: { $eq: slug } } },
+    sort: "createdAt:desc",
+    pagination: { pageSize: 20 },
+  });
+}
+
 export async function getTestimonials(params = {}) {
   return fetchAPI("/testimonials", { populate: { photo: true, topic: true, relatedServices: true }, ...params });
 }

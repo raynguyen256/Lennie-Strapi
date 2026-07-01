@@ -19,6 +19,7 @@ const COLLECTION_PERMISSIONS = [
   'faq-category',
   'product-tag',
   'branch',
+  'product-review',
 ];
 
 const SINGLE_TYPE_PERMISSIONS = ['general-setting', 'contact-info', 'homepage', 'founder'];

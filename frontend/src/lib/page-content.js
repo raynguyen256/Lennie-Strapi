@@ -16,6 +16,7 @@ import {
   getBranches,
   getSkinResults,
   getTestimonialsByProductSlug,
+  getProductReviewsBySlug,
   getPartnerBrands,
 } from "@/lib/strapi";
 import { mapPartnerBrands } from "@/lib/home-content";
@@ -228,15 +229,14 @@ export async function getShopArchive() {
 function mapProductReview(r) {
   return {
     name: r.name,
-    caseType: r.topic?.name || r.caseType,
     stars: r.stars,
-    text: r.quote,
-    img: getStrapiMedia(r.photo) || fallbackReviewsData[0].img,
+    text: r.comment,
+    verified: r.verified ?? true,
   };
 }
 
 export async function getProductDetail(slug) {
-  const [product, allProducts, productReviews] = await Promise.all([getProductBySlug(slug), getProducts(), getTestimonialsByProductSlug(slug)]);
+  const [product, allProducts, productReviews] = await Promise.all([getProductBySlug(slug), getProducts(), getProductReviewsBySlug(slug)]);
   const reviews = (productReviews || []).map(mapProductReview);
   if (product) {
     const mapped = mapProduct(product, 0);

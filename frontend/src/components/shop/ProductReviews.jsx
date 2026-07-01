@@ -34,12 +34,12 @@ export default function ProductReviews({ reviews, rating, reviewCount }) {
               </div>
               <p className="font-sans text-sm text-ink-2 leading-relaxed italic">&quot;{r.text}&quot;</p>
               <div className="flex items-center gap-3 pt-3 border-t border-divider">
-                <div className="w-9 h-9 rounded-full overflow-hidden bg-brand-blue-light border border-divider shrink-0">
-                  {r.img && <img src={r.img} alt={r.name} className="w-full h-full object-cover" />}
+                <div className="w-9 h-9 rounded-full bg-brand-blue flex items-center justify-center shrink-0">
+                  <span className="text-white font-sans font-bold text-[13px]">{r.name?.[0]?.toUpperCase()}</span>
                 </div>
                 <div>
                   <h4 className="font-sans text-[11px] font-bold tracking-wider uppercase text-ink">{r.name}</h4>
-                  {r.caseType && <p className="font-sans text-[10px] text-brand-blue tracking-wider uppercase">{r.caseType}</p>}
+                  {r.verified && <p className="font-sans text-[10px] text-brand-teal tracking-wider uppercase">Đã mua hàng</p>}
                 </div>
               </div>
             </div>
