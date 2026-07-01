@@ -50,13 +50,13 @@ export default function Navbar({ onOpenQuiz, active = "home" }) {
         style={{
           ...(scrolled
             ? undefined
-            : { background: "linear-gradient(to bottom, #ffffff 65%, rgba(255,255,255,0))" }),
+            : { background: "linear-gradient(to bottom, #ffffff 50%, rgba(255,255,255,0))" }),
           borderWidth: "0px",
         }}
         className={`w-full fixed top-0 inset-x-0 z-50 transition-all duration-300 ${scrolled ? "bg-white/95 backdrop-blur-md shadow-[0_6px_30px_rgba(44,74,111,.08)] border-b border-divider" : "border-b border-transparent"}`}
       >
       <div className="max-w-7xl mx-auto px-6 h-[104px] relative grid grid-cols-[1fr_auto_1fr] items-center gap-4">
-        <nav className="hidden lg:flex items-center gap-9 justify-self-start">
+        <nav className="hidden lg:flex items-center gap-9 justify-self-end">
           {NAV_LEFT.map(([t, h, k]) => (
             <NavLink key={h} label={t} href={h} navKey={k} active={active} />
           ))}
